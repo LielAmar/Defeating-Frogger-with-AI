@@ -1,5 +1,5 @@
-import math
 import os
+import random
 import sys
 from abc import abstractmethod, ABC
 from datetime import datetime, timedelta
@@ -9,7 +9,7 @@ import neat
 import pygame
 
 from car import Car
-from constants import WIDTH, HEIGHT, CELL_SIZE, FPS, BLACK, CARS_PER_ROW
+from constants import WIDTH, HEIGHT, CELL_SIZE, FPS, BLACK, CARS_PER_ROW, NEAT_GENERATIONS
 from neat_player import NeatPlayer
 
 
@@ -23,28 +23,32 @@ class FroggerGame(ABC):
 
         self.clock = pygame.time.Clock()
 
-        self.cars = self._create_cars()
+        self.cars = self.create_cars()
         self.players = pygame.sprite.Group()
 
-    def _create_cars(self):
+    @staticmethod
+    def create_cars():
         cars = pygame.sprite.Group()
         car_rows = [
-            (2, 0),
-            (3, 2),
-            (4, 4),
-            (5, 3),
+            (2, 1),
+            (3, -1),
+            (4, 1),
+            (5, -1),
             (6, 1),
 
-            (8, 0),
-            (9, 4),
-            (10, 3),
-            (11, 0),
-            (12, 2)
+            (8, 1),
+            (9, -1),
+            (10, 1),
+            (11, -1),
+            (12, 1)
         ]
 
-        for row, offset in car_rows:
+        for row, direction in car_rows:
+            second_offset = random.randint(0, 6)
+            offset = random.randint(3, 6)
+
             for i in range(CARS_PER_ROW):
-                car = Car((i * 6 + offset) * CELL_SIZE, row * CELL_SIZE, 1)
+                car = Car((i * offset + second_offset) * CELL_SIZE, row * CELL_SIZE, direction)
                 cars.add(car)
 
         return cars
@@ -59,7 +63,8 @@ class FroggerGame(ABC):
         self.cars.draw(self.screen)
 
         for player in self.players:
-            self.screen.blit(player.image, player.rect.topleft)
+            if player.alive:
+                self.screen.blit(player.image, player.rect.topleft)
 
         pygame.display.flip()
 
@@ -123,7 +128,7 @@ class NEATRunner:
         self.last_plot_time = datetime.now()
         self.game = NeatFroggerGame()
 
-    def run(self, generations=200):
+    def run(self, generations=NEAT_GENERATIONS):
         for gen in range(generations):
             self.population.run(self.eval_genomes, 1)
             self.update_plot(gen)
@@ -142,6 +147,8 @@ class NEATRunner:
             players.append(NeatPlayer())
             genome.fitness = 0
             ge.append(genome)
+
+        self.game.cars = self.game.create_cars()
 
         running = True
 
@@ -169,6 +176,9 @@ class NEATRunner:
         plt.ylabel("Fitness")
         plt.plot(self.best_fitness, label="Best Fitness (Logged)")
         plt.plot(self.average_fitness, label="Average Fitness")
+
+        plt.axhline(y=15, color='r', linestyle='--', label="Win Threshold")
+
         plt.legend()
         plt.pause(0.1)  # Brief pause to update the plot
 
