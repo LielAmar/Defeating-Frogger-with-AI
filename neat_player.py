@@ -1,12 +1,15 @@
 import pygame
 
-from constants import GREEN, CELL_SIZE, WIDTH, HEIGHT, NEAT_MAX_STEPS
+from constants import CELL_SIZE, WIDTH, HEIGHT, NEAT_MAX_STEPS
 from utils import crop_image
 
 
 class NeatPlayer(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
+
+        self.game_id = 0
+        self.fitnesses = []
 
         # Load player image from assets/player.png to be of size CELL_SIZE x CELL_SIZE and crop using utils.crop
         self.image = pygame.transform.scale(
@@ -15,6 +18,9 @@ class NeatPlayer(pygame.sprite.Sprite):
         )
 
         self.rect = self.image.get_rect()
+        self.reset()
+
+    def reset(self):
         self.rect.x = WIDTH // 2 - CELL_SIZE // 2
         self.rect.y = HEIGHT - CELL_SIZE
         self.alive = True
