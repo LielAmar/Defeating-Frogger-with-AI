@@ -38,6 +38,7 @@ class NeatFroggerGame(FroggerGame):
                         player.fitnesses.append(d + (player.steps / 10))
                     else:
                         player.fitnesses.append(d)
+                    # player.fitnesses.append(d)
                     player.reset()
                 else:
                     player.fitnesses.append(d)

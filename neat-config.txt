@@ -62,8 +62,8 @@ response_mutate_rate    = 0.2
 response_replace_rate   = 0.1
 
 # genome node options
-num_hidden              = 1
-num_inputs              = 5
+num_hidden              = 2
+num_inputs              = 11
 num_outputs             = 4
 num_initial_nodes       = 0
 initial_connection      = unconnected
@@ -78,10 +78,10 @@ node_delete_prob       = 0.4
 # species options
 max_stagnation         = 10
 species_fitness_func   = max
-elitism                = 2
+elitism                = 1
 
 [DefaultReproduction]
-elitism                = 2
+elitism                = 1
 survival_threshold     = 0.05
 
 [DefaultSpeciesSet]
