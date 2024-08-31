@@ -1,7 +1,7 @@
 [NEAT]
 fitness_criterion     = max
-fitness_threshold     = 60000.0
-pop_size              = 200
+fitness_threshold     = 60.0
+pop_size              = 500
 reset_on_extinction   = False
 
 [DefaultGenome]
@@ -29,7 +29,7 @@ compatibility_disjoint_coefficient = 1.0
 compatibility_weight_coefficient   = 0.5
 
 # connection options
-conn_add_prob           = 0.4
+conn_add_prob           = 0.6
 conn_enable_prob        = 0.2
 conn_initial_connection = unconnected
 conn_weight_init_mean   = 0.0
@@ -71,17 +71,17 @@ feed_forward            = True
 
 # genome structural mutation options
 structural_mutation_surerate = 0.3
-node_add_prob          = 0.4
+node_add_prob          = 0.6
 node_disable_prob      = 0.0
 node_delete_prob       = 0.4
 
 # species options
 max_stagnation         = 10
 species_fitness_func   = max
-elitism                = 3
+elitism                = 2
 
 [DefaultReproduction]
-elitism                = 3
+elitism                = 2
 survival_threshold     = 0.05
 
 [DefaultSpeciesSet]

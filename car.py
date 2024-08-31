@@ -1,15 +1,16 @@
-import pygame
 import random
 
-from constants import RED, CELL_SIZE, WIDTH, FPS
-from utils import crop_image
+import pygame
 
+from constants import CELL_SIZE, WIDTH, FPS
+from utils import crop_image
 
 POSSIBLE_CAR_IMAGES = [
     'assets/car1.png',
     'assets/car2.png',
     'assets/car3.png',
 ]
+
 
 class Car(pygame.sprite.Sprite):
     def __init__(self, x, y, direction):
@@ -32,7 +33,8 @@ class Car(pygame.sprite.Sprite):
         self.direction = direction
 
     def update(self):
-        self.rect.x += self.speed * self.direction
+        # self.rect.x += self.speed * self.direction
+        self.rect.x += self.direction * CELL_SIZE
 
         if self.rect.x > WIDTH and self.direction == 1:
             self.rect.x = -self.rect.width
