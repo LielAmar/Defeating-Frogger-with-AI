@@ -1,0 +1,93 @@
+[NEAT]
+fitness_criterion     = max
+fitness_threshold     = 60000.0
+pop_size              = 400
+reset_on_extinction   = False
+
+[DefaultGenome]
+# node activation options
+activation_default      = tanh
+activation_mutate_rate  = 0.2
+activation_options      = tanh
+
+# node aggregation options
+aggregation_default     = sum
+aggregation_mutate_rate = 0.2
+aggregation_options     = sum
+
+# node bias options
+bias_init_mean          = 0.0
+bias_init_stdev         = 1.0
+bias_max_value          = 30.0
+bias_min_value          = -30.0
+bias_mutate_power       = 0.5
+bias_mutate_rate        = 0.3
+bias_replace_rate       = 0.1
+
+# genome compatibility options
+compatibility_disjoint_coefficient = 1.0
+compatibility_weight_coefficient   = 0.5
+
+# connection options
+conn_add_prob           = 0.4
+conn_enable_prob        = 0.2
+conn_initial_connection = unconnected
+conn_weight_init_mean   = 0.0
+conn_weight_init_stdev  = 1.0
+conn_weight_max_value   = 30
+conn_weight_min_value   = -30
+conn_weight_mutate_power= 0.5
+conn_weight_mutate_rate = 0.8
+conn_weight_replace_rate= 0.1
+conn_delete_prob        = 0.2
+enabled_default         = True
+enabled_mutate_rate     = 0.01
+
+# weight initialization options
+weight_init_mean        = 0.0
+weight_init_stdev       = 1.0
+weight_max_value        = 30.0
+weight_min_value        = -30.0
+weight_mutate_power     = 0.5
+weight_mutate_rate      = 0.8
+weight_replace_rate     = 0.1
+
+# node response options
+response_init_mean      = 1.0
+response_init_stdev     = 0.0
+response_max_value      = 30.0
+response_min_value      = -30.0
+response_mutate_power   = 0.5
+response_mutate_rate    = 0.2
+response_replace_rate   = 0.1
+
+# genome node options
+num_hidden              = 1
+num_inputs              = 5
+num_outputs             = 4
+num_initial_nodes       = 0
+initial_connection      = unconnected
+feed_forward            = True
+
+# genome structural mutation options
+structural_mutation_surerate = 0.3
+node_add_prob          = 0.4
+node_disable_prob      = 0.0
+node_delete_prob       = 0.4
+
+# species options
+max_stagnation         = 10
+species_fitness_func   = max
+elitism                = 3
+
+[DefaultReproduction]
+elitism                = 3
+survival_threshold     = 0.05
+
+[DefaultSpeciesSet]
+compatibility_threshold = 4.0
+
+[DefaultStagnation]
+species_fitness_func = max
+max_stagnation = 20
+species_elitism = 2

@@ -1,0 +1,14 @@
+[project]
+authors = ["Liel Amar <liel@lielamar.com>"]
+channels = ["conda-forge"]
+description = "Add a short description here"
+name = "Frogger"
+platforms = ["win-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+python = "3.12.*"
+pip = ">=24.2,<25"
+pixi-pycharm = ">=0.0.6,<0.0.7"
