@@ -38,7 +38,9 @@ class FroggerGame(ABC):
         8,
     ]
 
-    def __init__(self):
+    def __init__(self, grid=False):
+        self.grid = grid
+
         pygame.init()
 
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -66,10 +68,10 @@ class FroggerGame(ABC):
 
         for row, direction in self.CAR_ROWS:
             second_offset = random.randint(0, 6)
-            offset = random.randint(3, 6)
+            offset = random.randint(3, 8)
 
             for i in range(CARS_PER_ROW):
-                car = Car((i * offset + second_offset) * CELL_SIZE, row * CELL_SIZE, direction)
+                car = Car((i * offset + second_offset) * CELL_SIZE, row * CELL_SIZE, direction, self.grid)
                 cars.add(car)
 
         return cars
