@@ -19,7 +19,7 @@ class NeatFroggerGame(FroggerGame):
     def __init__(self, grid=False):
         super().__init__(grid)
 
-    def run_game_step(self, nets, players, ge, best_of=3):
+    def run_game_step(self, nets, players, ge, best_of=5):
         self.clock.tick(FPS)
 
         for event in pygame.event.get():
@@ -36,7 +36,7 @@ class NeatFroggerGame(FroggerGame):
             if not player.alive:
                 player.fitnesses[player.game_id] += d
 
-                if player.game_id < best_of:
+                if player.game_id < best_of - 1:
                     player.reset()
                 else:
                     ge[x].fitness += len(set(player.action_taken))
@@ -122,7 +122,7 @@ class NEATRunner:
             running = True
 
             while running:
-                running = self.game.run_game_step(nets, players, ge, best_of=0)
+                running = self.game.run_game_step(nets, players, ge, best_of=1)
 
             win = player.rect.y <= 0
 
