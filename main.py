@@ -25,10 +25,11 @@ if __name__ == "__main__":
     print(f'Running game with agent {args.agent}!')
 
     if args.agent == 'neat':
-        runner = NEATRunner("neat-config.txt", args.grid)
-        if args.test:
-            runner.test_run()
-        else:
-            runner.run()
+        for i in range(30):
+            runner = NEATRunner("neat-config.txt", args.grid)
+            if args.test:
+                runner.test_run()
+            else:
+                runner.run()
     elif args.agent == 'dqn':
         DQNRunner().run()
