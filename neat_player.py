@@ -8,8 +8,9 @@ class NeatPlayer(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
 
-        self.game_id = 0
+        self.game_id = -1
         self.fitnesses = []
+        self.action_taken = []
 
         # Load player image from assets/player.png to be of size CELL_SIZE x CELL_SIZE and crop using utils.crop
         self.image = pygame.transform.scale(
@@ -23,13 +24,17 @@ class NeatPlayer(pygame.sprite.Sprite):
     def reset(self):
         self.rect.x = WIDTH // 2 - CELL_SIZE // 2
         self.rect.y = HEIGHT - CELL_SIZE
+        self.won = False
         self.alive = True
         self.direction = 2  # Default direction is Up
         self.steps = NEAT_MAX_STEPS
+        self.fitnesses.append(0)
+        self.game_id = len(self.fitnesses) - 1
 
     def update(self, direction):
         self.direction = direction  # Update the direction based on the movement
         self.steps -= 1  # Increment the step counter
+        self.action_taken.append(direction)
 
         if direction == 0:  # Move Left
             self.rect.x -= CELL_SIZE
