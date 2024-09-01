@@ -17,6 +17,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run the game')
 
     parser.add_argument('--agent', choices=['neat', 'dqn'], default='neat', help='The type of agent to play the game')
+    parser.add_argument('--grid', action='store_true', help='Run the game in test mode')
     parser.add_argument('--test', action='store_true', help='Run the game in test mode')
 
     args = parser.parse_args()
@@ -24,9 +25,10 @@ if __name__ == "__main__":
     print(f'Running game with agent {args.agent}!')
 
     if args.agent == 'neat':
+        runner = NEATRunner("neat-config.txt", args.grid)
         if args.test:
-            NEATRunner("neat-config.txt").test_run()
+            runner.test_run()
         else:
-            NEATRunner("neat-config.txt").run()
+            runner.run()
     elif args.agent == 'dqn':
         DQNRunner().run()

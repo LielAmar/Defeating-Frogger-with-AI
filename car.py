@@ -13,7 +13,7 @@ POSSIBLE_CAR_IMAGES = [
 
 
 class Car(pygame.sprite.Sprite):
-    def __init__(self, x, y, direction):
+    def __init__(self, x, y, direction, grid):
         super().__init__()
 
         self.image = pygame.transform.scale(
@@ -28,13 +28,18 @@ class Car(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-        self.speed = 0.1 * FPS + 9
+        self.speed = 3
 
         self.direction = direction
+        self.grid = grid
+
 
     def update(self):
-        self.rect.x += self.speed * self.direction
-        # self.rect.x += self.direction * CELL_SIZE
+        if self.grid:
+            self.rect.x += self.direction * CELL_SIZE
+        else:
+            self.rect.x += self.speed * self.direction
+
 
         if self.rect.x > WIDTH and self.direction == 1:
             self.rect.x = -self.rect.width

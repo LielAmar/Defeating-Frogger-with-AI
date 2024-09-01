@@ -1,7 +1,6 @@
 from datetime import timedelta, datetime
 
 import pickle
-from time import sleep
 
 import neat
 import sys
@@ -16,6 +15,9 @@ from neat_player import NeatPlayer
 
 
 class NeatFroggerGame(FroggerGame):
+
+    def __init__(self, grid=False):
+        super().__init__(grid)
 
     def run_game_step(self, nets, players, ge, best_of=3):
         self.clock.tick(FPS)
@@ -69,7 +71,7 @@ class NeatFroggerGame(FroggerGame):
 
 # NEATRunner Class
 class NEATRunner:
-    def __init__(self, config_file):
+    def __init__(self, config_file, grid=False):
         self.config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction,
                                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
                                          config_file)
@@ -82,7 +84,9 @@ class NEATRunner:
         self.best_fitness = []
         self.average_fitness = []
         self.last_plot_time = datetime.now()
-        self.game = NeatFroggerGame()
+        self.game = NeatFroggerGame(grid)
+
+        self.grid = grid
 
     def run(self):
         for gen in range(NEAT_GENERATIONS):
@@ -93,11 +97,11 @@ class NEATRunner:
         print(f'\nBest genome:\n{winner}')
 
         # Save winner to models folder
-        with open('models/winner1.pkl', 'wb') as f:
+        with open(f'models/winner_{'grid' if self.grid else 'no-grid'}_{datetime.now().timestamp()}.pkl', 'wb') as f:
             pickle.dump(winner, f)
 
     def test_run(self):
-        with open('models/winner1.pkl', 'rb') as f:
+        with open(f'models/winner.pkl', 'rb') as f:
             winner = pickle.load(f)
 
         wins = 0
@@ -118,13 +122,15 @@ class NEATRunner:
             running = True
 
             while running:
-                running = self.game.run_game_step(nets, players, ge, best_of=1)
+                running = self.game.run_game_step(nets, players, ge, best_of=0)
 
             win = player.rect.y <= 0
 
             print(f'Game {i + 1} finished with {win and "WIN" or "LOSE"}')
 
             wins += win
+
+        print(f"Total number of Wins: {wins}")
 
     def eval_genomes(self, genomes, config):
         nets = []
