@@ -28,13 +28,13 @@ class Car(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-        self.speed = -0.1 * FPS + 9
+        self.speed = 0.1 * FPS + 9
 
         self.direction = direction
 
     def update(self):
-        # self.rect.x += self.speed * self.direction
-        self.rect.x += self.direction * CELL_SIZE
+        self.rect.x += self.speed * self.direction
+        # self.rect.x += self.direction * CELL_SIZE
 
         if self.rect.x > WIDTH and self.direction == 1:
             self.rect.x = -self.rect.width

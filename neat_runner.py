@@ -32,18 +32,14 @@ class NeatFroggerGame(FroggerGame):
             d = ((HEIGHT - player.rect.y) // CELL_SIZE) - 1
 
             if not player.alive:
-                if player.game_id < (best_of - 1):
-                    player.game_id += 1
-                    if player.rect.y <= 0:
-                        player.fitnesses.append(d + (player.steps / 10))
-                    else:
-                        player.fitnesses.append(d)
-                    # player.fitnesses.append(d)
+                player.fitnesses[player.game_id] += d
+
+                if player.game_id < best_of:
                     player.reset()
                 else:
-                    player.fitnesses.append(d)
-
+                    ge[x].fitness += len(set(player.action_taken))
                     ge[x].fitness += sum(player.fitnesses) / len(player.fitnesses)
+
                     players.pop(x)
                     nets.pop(x)
                     ge.pop(x)
@@ -62,6 +58,9 @@ class NeatFroggerGame(FroggerGame):
 
             if player.rect.y <= 0:
                 player.alive = False
+                player.won = True
+
+                player.fitnesses[player.game_id] += player.steps / 10
 
         self._draw()
 
@@ -94,11 +93,11 @@ class NEATRunner:
         print(f'\nBest genome:\n{winner}')
 
         # Save winner to models folder
-        with open('models/winner.pkl', 'wb') as f:
+        with open('models/winner1.pkl', 'wb') as f:
             pickle.dump(winner, f)
 
     def test_run(self):
-        with open('models/winner.pkl', 'rb') as f:
+        with open('models/winner1.pkl', 'rb') as f:
             winner = pickle.load(f)
 
         wins = 0
