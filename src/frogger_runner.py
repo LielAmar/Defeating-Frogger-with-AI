@@ -4,15 +4,15 @@ from src.frogger_game import FroggerGame
 
 
 class FroggerRunner(ABC):
-    def __init__(self, game: FroggerGame, grid_like: bool = False):
+    def __init__(self, game: FroggerGame, settings):
         self.game = game
 
-        self.grid_like = grid_like
+        self.settings = settings
 
     @abstractmethod
     def run(self):
         pass
 
     @abstractmethod
-    def test_run(self, model_name: str, number_of_games: int = 100):
+    def test_run(self, model_name: str):
         pass

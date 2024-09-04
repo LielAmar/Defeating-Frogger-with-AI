@@ -5,8 +5,8 @@ from src.frogger_game import FroggerGame
 
 class OnlyUpGame(FroggerGame):
 
-    def __init__(self, grid_like: bool = False):
-        super().__init__(grid_like=grid_like)
+    def __init__(self, settings):
+        super().__init__(settings=settings)
 
     def update_configuration(self, player):
         self.players.append(player)
@@ -15,16 +15,6 @@ class OnlyUpGame(FroggerGame):
         super().update_game_frame()
 
         for x, player in enumerate(self.players):
-            up_direction = 2
+            direction = 2  # up
 
-            player.update(up_direction)
-
-            if pygame.sprite.spritecollideany(player, self.obstacles):
-                player.alive = False
-
-            if player.steps == 0:
-                player.alive = False
-
-            if player.rect.y <= 0:
-                player.alive = False
-                player.won = True
+            self.update_player(player, direction)

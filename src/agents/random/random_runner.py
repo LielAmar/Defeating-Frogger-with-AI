@@ -4,15 +4,13 @@ from src.frogger_runner import FroggerRunner
 
 
 class RandomRunner(FroggerRunner):
-    def __init__(self, grid_like: bool = False, games_to_play: int = 3):
-        super().__init__(game=RandomGame(grid_like=grid_like), grid_like=grid_like)
-
-        self.games_to_play = games_to_play
+    def __init__(self, settings):
+        super().__init__(game=RandomGame(settings=settings), settings=settings)
 
     def run(self):
         wins = 0
 
-        for i in range(self.games_to_play):
+        for i in range(self.settings.games):
             self.game.reset()
 
             player = RandomPlayer()
@@ -31,5 +29,5 @@ class RandomRunner(FroggerRunner):
 
         return wins
 
-    def test_run(self, model_name: str, number_of_games: int = 100):
+    def test_run(self, model_name: str):
         raise NotImplementedError
