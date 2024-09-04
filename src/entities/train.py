@@ -12,8 +12,8 @@ class Train(pygame.sprite.Sprite):
         'assets/train.png',
     ]
 
-    SPEED: ClassVar = 50
-    PROBABILITY: ClassVar = 0.05
+    SPEED: ClassVar = 30
+    PROBABILITY: ClassVar = 0.03
 
     TRAIN_SIZE: ClassVar = CELL_SIZE
 
@@ -30,6 +30,7 @@ class Train(pygame.sprite.Sprite):
         self.rect.y = y
 
         self.active = True
+        self.time_since_death = -1
 
     def update(self):
         if self.active:
@@ -41,6 +42,7 @@ class Train(pygame.sprite.Sprite):
 
         if self.rect.x > WIDTH:
             self.active = False
+            self.time_since_death = pygame.time.get_ticks()
 
     def reset(self):
         self.rect.x = -self.rect.width
