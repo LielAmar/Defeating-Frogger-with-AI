@@ -12,7 +12,3 @@ class FroggerRunner(ABC):
     @abstractmethod
     def run(self):
         pass
-
-    @abstractmethod
-    def test_run(self, model_name: str):
-        pass

@@ -28,6 +28,3 @@ class RandomRunner(FroggerRunner):
         print(f"Total number of Wins: {wins}")
 
         return wins
-
-    def test_run(self, model_name: str):
-        raise NotImplementedError

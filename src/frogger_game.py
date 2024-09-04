@@ -123,10 +123,11 @@ class FroggerGame(ABC):
 
     def _create_logs(self):
         for row, direction in self.LOG_ROWS:
-            offset = random.randint(1, 3)
+            offset = random.randint(4, 6)
+            second_offset = random.randint(2, 5)
 
             for i in range(LOGS_PER_ROW):
-                log = Log((i * 4 + offset) * CELL_SIZE, row * CELL_SIZE, direction, self.settings.grid_like)
+                log = Log((i * offset + second_offset) * CELL_SIZE, row * CELL_SIZE, direction, self.settings.grid_like)
                 self.logs.add(log)
 
     def _create_train(self):
@@ -195,6 +196,9 @@ class FroggerGame(ABC):
         pass
 
     def update_player(self, player, direction):
+        if pygame.sprite.spritecollideany(player, self.obstacles):
+            player.alive = False
+
         player.update(direction)
 
         # If the player died to a car, kill it
@@ -214,27 +218,36 @@ class FroggerGame(ABC):
         if self.settings.water:
             for water_row, direction in self.LOG_ROWS:
                 if player.rect.y == water_row * CELL_SIZE:
-                    logs_player_on = [log for log in self.logs if
-                                      log.rect.y == water_row * CELL_SIZE and log.rect.x < player.rect.x < log.rect.x + log.rect.width]
-                    if not any(logs_player_on):
+                    log_player_on = [
+                        log for log in self.logs if
+                        log.rect.y == water_row * CELL_SIZE and
+                        log.rect.x <= player.rect.x < log.rect.x + log.rect.width
+                    ]
+
+                    if len(log_player_on) == 0:
                         player.alive = False
                     else:
-                        for log in logs_player_on:
-                            player.rect.x += log.direction * (CELL_SIZE if self.settings.grid_like else Log.SPEED)
-                            player.rect.x = max(0, min(player.rect.x, WIDTH - CELL_SIZE))
+                        player.rect.x += log_player_on[0].direction * (CELL_SIZE if self.settings.grid_like else Log.SPEED)
+                        player.rect.x = max(0, min(player.rect.x, WIDTH - CELL_SIZE))
+
+                    log_player_will_be_on = [
+                        log for log in self.logs if
+                        log.rect.y == water_row * CELL_SIZE and
+                        log.rect.x + log.direction * CELL_SIZE <= player.rect.x < log.rect.x + log.rect.width + log.direction * CELL_SIZE
+                    ]
+
+                    if len(log_player_will_be_on) == 0:
+                        player.alive = False
+
 
     def run_single_game_frame(self):
         self.clock.tick(self.settings.fps)
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
         self.obstacles.update()
-        self.logs.update()
 
         self.update_game_frame()
+
+        self.logs.update()
 
         self._draw()
 

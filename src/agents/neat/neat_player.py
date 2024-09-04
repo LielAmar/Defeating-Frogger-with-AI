@@ -7,8 +7,18 @@ from src.entities.train import Train
 
 class NeatPlayer(Player):
 
+    def __init__(self):
+        super().__init__()
+
+        self.half_way = False
+
+    def reset(self):
+        super().reset()
+
+        self.half_way = False
+
     def get_state(self, obstacles: pygame.sprite.Group):
-        sensor_data = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        sensor_data = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
         # Sensor Left (directly horizontal to the left)
         for obstacle in obstacles:
@@ -74,11 +84,5 @@ class NeatPlayer(Player):
                 if obstacle.rect.x == self.rect.x and 0 < obstacle.rect.y - self.rect.y <= 3 * CELL_SIZE:
                     sensor_data[6] = 1.0
                     break
-
-        for obstacle in obstacles:
-            if isinstance(obstacle, Train) and obstacle.active:
-                sensor_data[7] = 1.0
-                sensor_data[8] = abs((obstacle.rect.y - self.rect.y) / CELL_SIZE)
-                sensor_data[9] = pygame.time.get_ticks() - obstacle.time_since_death
 
         return sensor_data

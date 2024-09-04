@@ -24,23 +24,40 @@ class NeatFroggerGame(FroggerGame):
             output = self.networks[x].activate(player.get_state(self.obstacles))
             direction = output.index(max(output))
 
+            old_position = player.rect.x, player.rect.y
+
             self.update_player(player, direction)
 
-            if player.won:
-                player.fitnesses[player.game_id] += player.steps / 10
+            new_position = player.rect.x, player.rect.y
+
+            progress_made = ((HEIGHT - player.rect.y) // CELL_SIZE) - 1
+
+            if player.alive:
+                if old_position == new_position:
+                    player.fitnesses[player.game_id] -= 0.1
+
+                if player.steps > 35:
+                    player.fitnesses[player.game_id] += 0.05
+                    player.fitnesses[player.game_id] += progress_made / 100
+
+                if progress_made > 8 and not player.half_way:
+                    player.fitnesses[player.game_id] += 5
+                    player.half_way = True
+
+            # if player.won:
+            #     player.fitnesses[player.game_id] += player.steps / 10
 
             if not player.alive:
-                progress_made = ((HEIGHT - player.rect.y) // CELL_SIZE) - 1
 
                 player.fitnesses[player.game_id] += progress_made
 
                 if player.game_id < self.settings.lives - 1:
                     player.reset()
                 else:
-                    unique_actions = len(set(player.action_taken))
+                    # unique_actions = len(set(player.action_taken))
                     average_fitness = sum(player.fitnesses) / len(player.fitnesses)
 
-                    self.genomes[x].fitness += unique_actions + average_fitness
+                    self.genomes[x].fitness += average_fitness
 
                     self.players.pop(x)
                     self.networks.pop(x)
