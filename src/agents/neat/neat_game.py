@@ -6,8 +6,8 @@ from src.frogger_game import FroggerGame
 
 class NeatFroggerGame(FroggerGame):
 
-    def __init__(self, grid_like: bool = False, lives_per_player: int = 5):
-        super().__init__(grid_like=grid_like)
+    def __init__(self, grid_like: bool = False, with_train: bool = False, lives_per_player: int = 5):
+        super().__init__(grid_like=grid_like, with_train=with_train)
 
         self.lives_per_player = lives_per_player
 
@@ -24,12 +24,12 @@ class NeatFroggerGame(FroggerGame):
         super().update_game_frame()
 
         for x, player in enumerate(self.players):
-            output = self.networks[x].activate(player.get_state(self.cars))
+            output = self.networks[x].activate(player.get_state(self.obstacles))
             direction = output.index(max(output))
             player.update(direction)
 
             # If the player died to a car, kill it
-            if pygame.sprite.spritecollideany(player, self.cars):
+            if pygame.sprite.spritecollideany(player, self.obstacles):
                 player.alive = False
 
             # If the player is out of steps, kill it

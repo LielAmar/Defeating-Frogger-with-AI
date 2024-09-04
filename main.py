@@ -11,7 +11,8 @@ if __name__ == "__main__":
 
     parser.add_argument('--agent', choices=['neat', 'dqn', 'onlyup', 'random'], default='neat',
                         help='The type of agent to play the game')
-    parser.add_argument('--grid_like', action='store_true', help='Run the game in test mode')
+    parser.add_argument('--grid_like', action='store_true', help='Run the game in grid mode')
+    parser.add_argument('--with_train', action='store_true', help='Run the game with train')
 
     parser.add_argument('--number_of_generations', type=int, default=200,
                         help='Number of generations to run the NEAT algorithm')
@@ -19,7 +20,8 @@ if __name__ == "__main__":
     parser.add_argument('--plot', action='store_true', help='Whether to plot')
 
     # add an argument that is a string
-    parser.add_argument('--test', type=str, default=None, help='Run the game in test mode (either "*" to test all available models or the name of a specific model)')
+    parser.add_argument('--test', type=str, default=None,
+                        help='Run the game in test mode (either "*" to test all available models or the name of a specific model)')
 
     args = parser.parse_args()
 
@@ -29,6 +31,8 @@ if __name__ == "__main__":
         runner = NEATRunner(
             grid_like=args.grid_like,
             config_file="neat-config.txt",
+            with_train=args.with_train,
+            lives_per_player=1 if args.test is not None else 5,
             number_of_generations=args.number_of_generations,
             plot=args.plot
         )
