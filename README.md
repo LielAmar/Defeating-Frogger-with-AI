@@ -15,17 +15,15 @@ pip install -r requirements.txt
 ## Configuration
 There are several configuration flags that can be inputted to the program, to change the behavior of the game and the learning algorithms.
 The flags are as follows:
-- `--agent`: The agent to use. Can be either `dqn`, `neat`, `random` or `onlyup`. Default is `random`.
+- `--agent`: The agent to use. Can be either `dqn`, `neat`, `random`, `onlyup` or `human`. Default is `random`.
 - `--fps`: The frames per second of the game. Default is 5.
 - `--grid_like`: Whether to use a grid-like environment or a continuous one. Default is `False`.
 - `--train`: Whether to include the train obstacle or not. Default is `False`.
-- `--water`: Whether to include the water segment or not. Default is `False`.
-- `--games`: The number of games to play. Default is 3.
-- `--lives`: The number of lives the agent has. Default is 3 (only for NEAT).
+	@@ -25,7 +25,7 @@ The flags are as follows:
 - `--neat_config`: The configuration file for NEAT. Default is `neat-config.txt`.
 - `--generations`: The number of generations to run NEAT for. Default is 200.
 - `--plot`: Whether to plot the results or not. Default is `False`.
-- `--test`: Whether to test a model or not. Default is `*` - meaning all available models will be tested. Can also be a specific model name to be tested.
+- `--test`: Whether to test a model or not. Default is None. `*` tests all available models will be tested. Can also be a specific model name to be tested.
 
 ## Our Agents
 

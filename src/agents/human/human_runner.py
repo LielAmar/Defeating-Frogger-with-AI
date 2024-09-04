@@ -1,11 +1,11 @@
-from src.agents.onlyup.onlyup_game import OnlyUpGame
-from src.agents.onlyup.onlyup_player import OnlyUpPlayer
+from src.agents.human.human_game import HumanGame
+from src.agents.human.human_player import HumanPlayer
 from src.frogger_runner import FroggerRunner
 
 
-class OnlyUpRunner(FroggerRunner):
+class HumanRunner(FroggerRunner):
     def __init__(self, settings):
-        super().__init__(game=OnlyUpGame(settings=settings), settings=settings)
+        super().__init__(game=HumanGame(settings=settings), settings=settings)
 
     def run(self):
         wins = 0
@@ -13,7 +13,7 @@ class OnlyUpRunner(FroggerRunner):
         for i in range(self.settings.games):
             self.game.reset()
 
-            player = OnlyUpPlayer()
+            player = HumanPlayer()
             self.game.update_configuration(player=player)
 
             while True:

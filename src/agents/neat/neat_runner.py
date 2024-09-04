@@ -32,6 +32,10 @@ class NEATRunner(FroggerRunner):
         self.last_plot_time = datetime.now()
 
     def run(self):
+        if self.settings.test is not None:
+            self._run_test()
+            return
+
         for gen in range(self.settings.generations):
             self.population.run(self.eval_genomes, 1)
 
@@ -47,7 +51,30 @@ class NEATRunner(FroggerRunner):
         with open(f'models/{file}', 'wb') as f:
             pickle.dump(best_genome, f)
 
-    def test_run(self, model_name: str):
+    def _run_test(self):
+        models_files = []
+
+        if self.settings.test == '*':
+            models_files += [file for file in os.listdir('models') if file.endswith('.pkl')]
+        else:
+            models_files.append(self.settings.test)
+
+        wins_tracker = dict()
+
+        for model_file in models_files:
+            wins_tracker[model_file] = self._run_single_test(model_file)
+
+            print(f'{model_file}: won {wins_tracker[model_file]}% of the games')
+
+            print(f'Total Wins: {sum(wins_tracker.values())}')
+            print(f'Win Rate: {sum(wins_tracker.values()) / (len(wins_tracker) * 100)}%')
+
+            best_player = max(wins_tracker, key=wins_tracker.get)
+
+            print(f'Best Player Wins: {wins_tracker[best_player]}')
+            print(f'Best Player Win Rate: {wins_tracker[best_player] / 100}%')
+
+    def _run_single_test(self, model_name: str):
         # Load model from models folder
         with open(f'models/{model_name}', 'rb') as f:
             model = pickle.load(f)
