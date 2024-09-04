@@ -24,7 +24,7 @@ class DQNFroggerGame(FroggerGame):
 
         player = self.players.sprites()[0]
 
-        state = player.get_state(self.cars)
+        state = player.get_state(self.obstacles)
 
         action = player.get_action(state)
 
@@ -35,16 +35,16 @@ class DQNFroggerGame(FroggerGame):
         if player.rect.y <= 0:
             reward = 100
 
-        elif pygame.sprite.spritecollideany(player, self.cars) or player.steps == 0:
+        elif pygame.sprite.spritecollideany(player, self.obstacles) or player.steps == 0:
             reward = -100
             player.alive = False
 
-        next_state = player.get_state(self.cars)
+        next_state = player.get_state(self.obstacles)
         player.remember(state, action, reward, next_state, not player.alive)
 
         player.replay()
 
-        self.cars.update()
+        self.obstacles.update()
 
         self._draw()
 

@@ -13,11 +13,15 @@ class NEATRunner(FroggerRunner):
     def __init__(
             self,
             grid_like: bool = False,
+            with_train: bool = False,
             config_file: str = 'neat-config.txt',
+            lives_per_player: int = 5,
             number_of_generations: int = 200,
             plot: bool = True
     ):
-        super().__init__(game=NeatFroggerGame(grid_like=grid_like), grid_like=grid_like)
+        super().__init__(
+            game=NeatFroggerGame(grid_like=grid_like, with_train=with_train, lives_per_player=lives_per_player),
+            grid_like=grid_like)
 
         self.config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction,
                                          neat.DefaultSpeciesSet, neat.DefaultStagnation,

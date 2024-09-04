@@ -19,7 +19,7 @@ class OnlyUpGame(FroggerGame):
 
             player.update(up_direction)
 
-            if pygame.sprite.spritecollideany(player, self.cars):
+            if pygame.sprite.spritecollideany(player, self.obstacles):
                 player.alive = False
 
             if player.steps == 0:
