@@ -12,28 +12,19 @@ from src.frogger_runner import FroggerRunner
 class NEATRunner(FroggerRunner):
     def __init__(
             self,
-            grid_like: bool = False,
-            with_train: bool = False,
-            config_file: str = 'neat-config.txt',
-            lives_per_player: int = 5,
-            number_of_generations: int = 200,
-            plot: bool = True
+            settings
     ):
         super().__init__(
-            game=NeatFroggerGame(grid_like=grid_like, with_train=with_train, lives_per_player=lives_per_player),
-            grid_like=grid_like)
+            game=NeatFroggerGame(settings=settings), settings=settings)
 
         self.config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction,
                                          neat.DefaultSpeciesSet, neat.DefaultStagnation,
-                                         config_file)
+                                         self.settings.neat_config)
 
         self.population = neat.Population(self.config)
         self.population.add_reporter(neat.StdOutReporter(True))
         self.stats = neat.StatisticsReporter()
         self.population.add_reporter(self.stats)
-
-        self.number_of_generations = number_of_generations
-        self.plot = plot
 
         # Plotting configuration
         self.best_fitness = []
@@ -41,10 +32,10 @@ class NEATRunner(FroggerRunner):
         self.last_plot_time = datetime.now()
 
     def run(self):
-        for gen in range(self.number_of_generations):
+        for gen in range(self.settings.generations):
             self.population.run(self.eval_genomes, 1)
 
-            if self.plot:
+            if self.settings.plot:
                 self.update_plot(gen)
 
         best_genome = self.stats.best_genome()
@@ -56,14 +47,14 @@ class NEATRunner(FroggerRunner):
         with open(f'models/{file}', 'wb') as f:
             pickle.dump(best_genome, f)
 
-    def test_run(self, model_name: str, number_of_games: int = 100):
+    def test_run(self, model_name: str):
         # Load model from models folder
         with open(f'models/{model_name}', 'rb') as f:
             model = pickle.load(f)
 
         wins = 0
 
-        for i in range(number_of_games):
+        for i in range(self.settings.games):
             networks = []
             players = []
             genomes = []
