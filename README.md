@@ -18,8 +18,8 @@ The flags are as follows:
 - `--agent`: The agent to use. Can be either `dqn`, `neat`, `random` or `onlyup`. Default is `random`.
 - `--fps`: The frames per second of the game. Default is 5.
 - `--grid_like`: Whether to use a grid-like environment or a continuous one. Default is `False`.
-- `--with_train`: Whether to include the train obstacle or not. Default is `False`.
-- `--with_water`: Whether to include the water segment or not. Default is `False`.
+- `--train`: Whether to include the train obstacle or not. Default is `False`.
+- `--water`: Whether to include the water segment or not. Default is `False`.
 - `--games`: The number of games to play. Default is 3.
 - `--lives`: The number of lives the agent has. Default is 3 (only for NEAT).
 - `--neat_config`: The configuration file for NEAT. Default is `neat-config.txt`.
@@ -131,6 +131,6 @@ The configuration we had used for this agent is as follows:
     species_elitism = 2
     ```
 
-- `flags`: `--agent=neat --fps=240 --grid_like=True --with_train=False --with_water=False --lives=5 --neat_config=neat-config.txt --generations=200 --plot=True`
+- `flags`: `--agent=neat --fps=240 --grid_like=True --train=False --water=False --lives=5 --neat_config=neat-config.txt --generations=200 --plot=True`
 
 ### DQN

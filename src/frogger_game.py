@@ -48,11 +48,11 @@ class FroggerGame(ABC):
     def __init__(self, settings):
         self.settings = settings
 
-        if not settings.with_water:
+        if not settings.water:
             self.CAR_ROWS = self.CAR_ROWS + self.LOG_ROWS
             self.LOG_ROWS = []
 
-        if not settings.with_train:
+        if not settings.train:
             self.SIDEWALK_ROWS = self.SIDEWALK_ROWS + self.TRAIN_ROWS
             self.TRAIN_ROWS = []
 
@@ -166,7 +166,7 @@ class FroggerGame(ABC):
                 self.screen.blit(self.road_image, (i, row * CELL_SIZE))
 
         for row, direction in self.TRAIN_ROWS:
-            if self.settings.with_train:
+            if self.settings.train:
                 for i in range(0, WIDTH, self.rail_image.get_width()):
                     self.screen.blit(self.rail_image, (i, row * CELL_SIZE))
             else:
@@ -174,7 +174,7 @@ class FroggerGame(ABC):
                     self.screen.blit(self.sidewalk_image, (i, row * CELL_SIZE))
 
         for row, direction in self.LOG_ROWS:
-            if self.settings.with_water:
+            if self.settings.water:
                 for i in range(0, WIDTH, self.water_image.get_width()):
                     self.screen.blit(self.water_image, (i, row * CELL_SIZE))
             else:
@@ -211,7 +211,7 @@ class FroggerGame(ABC):
             player.won = True
 
         # if there isn't a log under the player, kill it
-        if self.settings.with_water:
+        if self.settings.water:
             for water_row, direction in self.LOG_ROWS:
                 if player.rect.y == water_row * CELL_SIZE:
                     logs_player_on = [log for log in self.logs if

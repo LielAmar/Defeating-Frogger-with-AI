@@ -18,8 +18,8 @@ if __name__ == "__main__":
     # Settings
     parser.add_argument('--fps', type=int, default=5, help='Frames per second')
     parser.add_argument('--grid_like', action='store_true', help='Run the game in grid mode')
-    parser.add_argument('--with_train', action='store_true', help='Run the game with train')
-    parser.add_argument('--with_water', action='store_true', help='Run the game with water section')
+    parser.add_argument('--train', action='store_true', help='Run the game with train')
+    parser.add_argument('--water', action='store_true', help='Run the game with water section')
     parser.add_argument('--games', type=int, default=3, help='Number of games to play')
     parser.add_argument('--lives', type=int, default=5, help='Number of lives per player')
     parser.add_argument('--neat_config', type=str, default='neat-config.txt', help='NEAT configuration file')
