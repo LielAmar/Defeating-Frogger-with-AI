@@ -1,13 +1,13 @@
 [NEAT]
 fitness_criterion     = max
 fitness_threshold     = 22.5
-pop_size              = 200
+pop_size              = 400
 reset_on_extinction   = False
 
 [DefaultGenome]
 # node activation options
 activation_default      = tanh
-activation_mutate_rate  = 0.4
+activation_mutate_rate  = 0.3
 activation_options      = tanh relu
 
 # node aggregation options
@@ -25,11 +25,11 @@ bias_mutate_rate        = 0.3
 bias_replace_rate       = 0.1
 
 # genome compatibility options
-compatibility_disjoint_coefficient = 1.5
+compatibility_disjoint_coefficient = 2
 compatibility_weight_coefficient   = 0.5
 
 # connection options
-conn_add_prob           = 0.7
+conn_add_prob           = 0.2
 conn_enable_prob        = 0.2
 conn_initial_connection = unconnected
 conn_weight_init_mean   = 0.0
@@ -39,7 +39,7 @@ conn_weight_min_value   = -30
 conn_weight_mutate_power= 0.5
 conn_weight_mutate_rate = 0.4
 conn_weight_replace_rate= 0.1
-conn_delete_prob        = 0.2
+conn_delete_prob        = 0.1
 enabled_default         = True
 enabled_mutate_rate     = 0.1
 
@@ -48,8 +48,8 @@ weight_init_mean        = 0.0
 weight_init_stdev       = 1.0
 weight_max_value        = 30.0
 weight_min_value        = -30.0
-weight_mutate_power     = 0.5
-weight_mutate_rate      = 0.4
+weight_mutate_power     = 0.4
+weight_mutate_rate      = 0.3
 weight_replace_rate     = 0.1
 
 # node response options
@@ -63,7 +63,7 @@ response_replace_rate   = 0.1
 
 # genome node options
 num_hidden              = 3
-num_inputs              = 7
+num_inputs              = 12
 num_outputs             = 4
 num_initial_nodes       = 0
 initial_connection      = unconnected
@@ -85,7 +85,7 @@ elitism                = 2
 survival_threshold     = 0.1
 
 [DefaultSpeciesSet]
-compatibility_threshold = 3.9
+compatibility_threshold = 4.5
 
 [DefaultStagnation]
 species_fitness_func = max

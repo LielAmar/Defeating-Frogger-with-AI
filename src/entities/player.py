@@ -35,7 +35,7 @@ class Player(pygame.sprite.Sprite, ABC):
         self.reset()
 
     def reset(self):
-        self.rect.x = WIDTH // 2 - CELL_SIZE // 2
+        self.rect.x = WIDTH // 2 - CELL_SIZE
         self.rect.y = HEIGHT - CELL_SIZE
 
         self.won = False
@@ -64,7 +64,3 @@ class Player(pygame.sprite.Sprite, ABC):
 
         self.rect.x = max(0, min(self.rect.x, WIDTH - CELL_SIZE))
         self.rect.y = max(0, min(self.rect.y, HEIGHT - CELL_SIZE))
-
-    @abstractmethod
-    def get_state(self, cars: pygame.sprite.Group) -> list:
-        ...

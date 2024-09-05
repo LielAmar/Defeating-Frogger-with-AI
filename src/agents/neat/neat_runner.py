@@ -1,3 +1,4 @@
+import os
 import pickle
 from datetime import datetime, timedelta
 
@@ -48,14 +49,14 @@ class NEATRunner(FroggerRunner):
         print(f'Best genome: {best_genome}. Saving to file {file}')
 
         # Save best_genome to models folder
-        with open(f'models/{file}', 'wb') as f:
+        with open(f'models/neat/{file}', 'wb') as f:
             pickle.dump(best_genome, f)
 
     def _run_test(self):
         models_files = []
 
         if self.settings.test == '*':
-            models_files += [file for file in os.listdir('models') if file.endswith('.pkl')]
+            models_files += [file for file in os.listdir('models/neat') if file.endswith('.pkl')]
         else:
             models_files.append(self.settings.test)
 
@@ -74,9 +75,11 @@ class NEATRunner(FroggerRunner):
             print(f'Best Player Wins: {wins_tracker[best_player]}')
             print(f'Best Player Win Rate: {wins_tracker[best_player] / 100}%')
 
+        print(f"Best Player: {best_player}")
+
     def _run_single_test(self, model_name: str):
         # Load model from models folder
-        with open(f'models/{model_name}', 'rb') as f:
+        with open(f'models/neat/{model_name}', 'rb') as f:
             model = pickle.load(f)
 
         wins = 0

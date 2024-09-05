@@ -1,6 +1,6 @@
 import argparse
-import os
 
+from src.agents.human.human_runner import HumanRunner
 from src.agents.neat.neat_runner import NEATRunner
 from src.agents.onlyup.onlyup_runner import OnlyUpRunner
 from src.agents.random.random_runner import RandomRunner

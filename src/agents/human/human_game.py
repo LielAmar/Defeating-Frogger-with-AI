@@ -13,6 +13,18 @@ class HumanGame(FroggerGame):
     def update_configuration(self, player):
         self.players.append(player)
 
+    def run_single_game_frame(self):
+        self.clock.tick(self.settings.fps)
+
+        self.obstacles.update()
+        self.logs.update()
+
+        self.update_game_frame()
+
+        self._draw()
+
+        return any(player.alive for player in self.players)
+
     def update_game_frame(self):
 
         super().update_game_frame()
