@@ -1,13 +1,14 @@
 import random
+from argparse import Namespace
 from typing import ClassVar
 
-import pygame
+from src.constants import CELL_SIZE
+from src.direction import Direction
+from src.entities.lethal_entity import LethalEntity
 
-from src.constants import CELL_SIZE, WIDTH
-from src.utils import crop_image
 
+class Train(LethalEntity):
 
-class Train(pygame.sprite.Sprite):
     POSSIBLE_TRAIN_IMAGES: ClassVar = [
         'assets/train.png',
     ]
@@ -17,32 +18,28 @@ class Train(pygame.sprite.Sprite):
 
     TRAIN_SIZE: ClassVar = CELL_SIZE
 
-    def __init__(self, x: int, y: int):
-        super().__init__()
-
-        self.image = pygame.transform.scale(
-            crop_image(pygame.image.load(random.choice(self.POSSIBLE_TRAIN_IMAGES)).convert_alpha()),
-            (self.TRAIN_SIZE * 10, self.TRAIN_SIZE)
+    def __init__(self, x: int, y: int, settings: Namespace, direction: Direction):
+        super().__init__(
+            x=x,
+            y=y,
+            width=self.TRAIN_SIZE * 5,
+            height=self.TRAIN_SIZE,
+            possible_images=self.POSSIBLE_TRAIN_IMAGES,
+            direction=direction,
+            settings=settings,
+            speed=self.SPEED
         )
 
-        self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
-
         self.active = True
-        self.time_since_death = -1
 
-    def update(self):
+    def update(self) -> bool:
         if self.active:
-            self.rect.x += self.SPEED
+            if super().update():
+                self.active = False
+                return True
         else:
             if random.random() < self.PROBABILITY:
                 self.active = True
                 self.reset()
 
-        if self.rect.x > WIDTH:
-            self.active = False
-            self.time_since_death = pygame.time.get_ticks()
-
-    def reset(self):
-        self.rect.x = -self.rect.width
+        return False

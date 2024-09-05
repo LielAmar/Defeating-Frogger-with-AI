@@ -2,7 +2,6 @@ import pygame
 
 from src.constants import CELL_SIZE
 from src.entities.player import Player
-from src.entities.train import Train
 
 
 class NeatPlayer(Player):

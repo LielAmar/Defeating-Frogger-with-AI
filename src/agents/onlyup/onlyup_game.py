@@ -1,5 +1,6 @@
 import pygame
 
+from src.direction import Direction
 from src.frogger_game import FroggerGame
 
 
@@ -15,6 +16,4 @@ class OnlyUpGame(FroggerGame):
         super().update_game_frame()
 
         for x, player in enumerate(self.players):
-            direction = 2  # up
-
-            self.update_player(player, direction)
+            self.update_player(player, Direction.UP)

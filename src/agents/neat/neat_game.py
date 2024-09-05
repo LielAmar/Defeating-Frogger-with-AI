@@ -1,6 +1,7 @@
 import pygame
 
 from src.constants import HEIGHT, CELL_SIZE
+from src.direction import Direction
 from src.frogger_game import FroggerGame
 
 
@@ -22,7 +23,8 @@ class NeatFroggerGame(FroggerGame):
 
         for x, player in enumerate(self.players):
             output = self.networks[x].activate(player.get_state(self.obstacles))
-            direction = output.index(max(output))
+            direction_index = output.index(max(output))
+            direction = Direction.from_int(direction_index)
 
             self.update_player(player, direction)
 
