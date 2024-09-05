@@ -9,6 +9,10 @@ from src.utils import crop_image
 
 
 class Player(pygame.sprite.Sprite, ABC):
+    """
+    A class representing the player entity
+    """
+
     PLAYER_IMAGE: ClassVar = 'assets/player.png'
 
     PLAYER_SIZE: ClassVar = CELL_SIZE
@@ -36,6 +40,12 @@ class Player(pygame.sprite.Sprite, ABC):
         self.reset()
 
     def reset(self):
+        """
+        Reset the player to its initial state.
+
+        :return:
+        """
+
         self.rect.x = WIDTH // 2 - CELL_SIZE
         self.rect.y = HEIGHT - CELL_SIZE
 
@@ -49,6 +59,13 @@ class Player(pygame.sprite.Sprite, ABC):
         self.game_id = len(self.fitnesses) - 1
 
     def update(self, direction: Direction):
+        """
+        Update the player's position
+
+        :param direction: Direction to move the player
+        :return:
+        """
+
         self.steps -= 1
         self.action_taken.append(direction)
 

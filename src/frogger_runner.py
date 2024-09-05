@@ -11,4 +11,10 @@ class FroggerRunner(ABC):
 
     @abstractmethod
     def run(self):
+        """
+        Run the game
+
+        :return:
+        """
+
         pass

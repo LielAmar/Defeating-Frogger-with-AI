@@ -28,7 +28,7 @@ class LethalEntity(pygame.sprite.Sprite):
             (width, height)
         )
 
-        if direction == -1:
+        if direction == Direction.LEFT:
             self.image = pygame.transform.flip(self.image, True, False)
 
         self.rect = self.image.get_rect()
@@ -42,8 +42,10 @@ class LethalEntity(pygame.sprite.Sprite):
     def update(self) -> bool:
         """
         Update the position of the entity
+
         :return: True if the entity was out of bounds
         """
+
         self.rect.x += self.direction.x * (CELL_SIZE if self.settings.grid_like else self.speed)
 
         if self.rect.x > WIDTH and self.direction == Direction.RIGHT:

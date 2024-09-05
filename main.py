@@ -1,3 +1,6 @@
+"""
+This file is the main entry point for the game. It allows the user to run the game with different agents and settings.
+"""
 import argparse
 
 from src.agents.human.human_runner import HumanRunner

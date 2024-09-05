@@ -15,25 +15,22 @@ LOGS_PER_ROW = 3
 
 NEAT_MAX_STEPS = 50
 
-# Map
+# Map Configurations
 CAR_ROWS: list[tuple[int, Direction]] = [
     (9, Direction.LEFT),
     (10, Direction.RIGHT),
     (11, Direction.LEFT),
     (12, Direction.RIGHT)
 ]
-
 WATER_ROWS: list[tuple[int, Direction]] = [
     (2, Direction.RIGHT),
     (3, Direction.LEFT),
     (4, Direction.RIGHT),
     (5, Direction.LEFT),
 ]
-
 TRAIN_ROWS: list[tuple[int, Direction]] = [
     (7, Direction.RIGHT)
 ]
-
 FINISH_ROWS: list[tuple[int, Direction]] = [
     (0, Direction.NONE)
 ]

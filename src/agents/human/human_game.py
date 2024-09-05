@@ -2,6 +2,7 @@ import sys
 
 import pygame
 
+from src.direction import Direction
 from src.frogger_game import FroggerGame
 
 
@@ -29,7 +30,7 @@ class HumanGame(FroggerGame):
 
         super().update_game_frame()
 
-        direction = 4
+        direction = Direction.NONE
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -37,16 +38,7 @@ class HumanGame(FroggerGame):
                 sys.exit()
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_a:
-                    direction = 0
-                elif event.key == pygame.K_d:
-                    direction = 1
-                elif event.key == pygame.K_w:
-                    direction = 2
-                elif event.key == pygame.K_s:
-                    direction = 3
-                else:
-                    direction = 4
+                direction = Direction.from_key(event.key)
 
         for player in self.players:
             self.update_player(player, direction)

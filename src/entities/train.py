@@ -8,6 +8,9 @@ from src.entities.lethal_entity import LethalEntity
 
 
 class Train(LethalEntity):
+    """
+    A class representing a train entity
+    """
 
     POSSIBLE_TRAIN_IMAGES: ClassVar = [
         'assets/train.png',
@@ -33,6 +36,15 @@ class Train(LethalEntity):
         self.active = True
 
     def update(self) -> bool:
+        """
+        Update the position of the train
+
+        If the train is active, update its position
+        Otherwise, with a certain probability, activate the train
+
+        :return: True if the train was out of bounds
+        """
+
         if self.active:
             if super().update():
                 self.active = False

@@ -15,6 +15,9 @@ from src.entities.train import Train
 
 
 class FroggerGame(ABC):
+    """
+    Abstract class for the Frogger Game
+    """
 
     def __init__(self, settings: Namespace):
         self.settings = settings
@@ -56,6 +59,10 @@ class FroggerGame(ABC):
         self.reset()
 
     def reset(self):
+        """
+        Reset the game.
+        """
+
         self.obstacles.empty()
         self.logs.empty()
 
@@ -66,6 +73,10 @@ class FroggerGame(ABC):
         self.players = []
 
     def _create_cars(self):
+        """
+        Create all the cars in the game
+        """
+
         for row, direction in self.CAR_ROWS:
             offset = random.randint(3, 8)
             second_offset = random.randint(0, 6)
@@ -75,6 +86,10 @@ class FroggerGame(ABC):
                 self.obstacles.add(car)
 
     def _create_train(self):
+        """
+        Create all the trains in the game
+        """
+
         for row, direction in self.TRAIN_ROWS:
             train = Train(0, row * CELL_SIZE, self.settings, direction)
             train.active = False
@@ -82,6 +97,10 @@ class FroggerGame(ABC):
             self.obstacles.add(train)
 
     def _create_logs(self):
+        """
+        Create all the logs in the game
+        """
+
         for row, direction in self.WATER_ROWS:
             offset = random.randint(1, 3)
 
@@ -90,6 +109,10 @@ class FroggerGame(ABC):
                 self.logs.add(log)
 
     def _draw(self):
+        """
+        Draw the game
+        """
+
         self.screen.fill(BLACK)
 
         self._draw_background()
@@ -102,6 +125,10 @@ class FroggerGame(ABC):
         pygame.display.flip()
 
     def _draw_background(self):
+        """
+        Draw the background of the game
+        """
+
         self._draw_segment(self.FINISH_ROWS, self.finish_image)
         self._draw_segment(self.GRASS_ROWS, self.grass_image)
         self._draw_segment(self.SIDEWALK_ROWS, self.sidewalk_image)
@@ -110,24 +137,57 @@ class FroggerGame(ABC):
         self._draw_segment(self.WATER_ROWS, self.water_image)
 
     def _draw_segment(self, rows, image):
+        """"
+        Draw a specific segment of the game background
+        """
+
         for row, direction in rows:
             for i in range(0, WIDTH, image.get_width()):
                 self.screen.blit(image, (i, row * CELL_SIZE))
 
     def _draw_players(self, alive_only: bool = True):
+        """
+        Draw the players
+
+        :param alive_only: Whether to draw only the alive players
+        """
+
         for player in self.players:
             if not alive_only or player.alive:
                 self.screen.blit(player.image, player.rect.topleft)
 
     @abstractmethod
     def update_configuration(self, *args, **kwargs):
+        """
+        Update the configuration of the game
+
+        :param args:
+        :param kwargs:
+        :return:
+        """
+
         pass
 
     @abstractmethod
     def update_game_frame(self):
+        """
+        A method that can be used to update additional sprites in the game.
+
+        :return:
+        """
+
         pass
 
     def update_player(self, player: Player, direction: Direction):
+        """
+        Update a single player.
+        This method is called by the game loop to update the player's position.
+        It also checks if the player has reached the top of the screen or if it had died.
+
+        :param player: Player to update
+        :param direction: Direction to move the player
+        """
+
         player.update(direction)
 
         # If the player died to a car, kill it
@@ -160,6 +220,12 @@ class FroggerGame(ABC):
                         player.rect.x = max(0, min(player.rect.x, WIDTH - CELL_SIZE))
 
     def run_single_game_frame(self):
+        """
+        Runs a single frame of the game.
+
+        :return: True if the game is still running (any player is alive)
+        """
+
         self.clock.tick(self.settings.fps)
 
         for event in pygame.event.get():
@@ -177,8 +243,15 @@ class FroggerGame(ABC):
         return any(player.alive for player in self.players)
 
     @staticmethod
-    def _load_background_asset(asset):
-        image = pygame.image.load(asset)
+    def _load_background_asset(asset_file):
+        """
+        Load and scale a background asset
+
+        :param asset_file: Path to the asset
+        :return: Scaled asset
+        """
+
+        image = pygame.image.load(asset_file)
 
         return pygame.transform.scale(
             image,

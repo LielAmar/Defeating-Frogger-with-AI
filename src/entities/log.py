@@ -7,6 +7,10 @@ from src.entities.lethal_entity import LethalEntity
 
 
 class Log(LethalEntity):
+    """
+    A class representing a log entity
+    """
+
     POSSIBLE_LOG_IMAGES: ClassVar = [
         'assets/log.png'
     ]

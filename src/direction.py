@@ -1,7 +1,13 @@
 from enum import Enum
 
+import pygame
+
 
 class Direction(Enum):
+    """"
+    Enum class for directions
+    """
+
     LEFT = 0
     RIGHT = 1
     UP = 2
@@ -39,6 +45,19 @@ class Direction(Enum):
         if index == 2:
             return Direction.UP
         if index == 3:
+            return Direction.DOWN
+
+        return Direction.NONE
+
+    @staticmethod
+    def from_key(key):
+        if key == pygame.K_a:
+            return Direction.LEFT
+        elif key == pygame.K_d:
+            return Direction.RIGHT
+        elif key == pygame.K_w:
+            return Direction.UP
+        elif key == pygame.K_s:
             return Direction.DOWN
 
         return Direction.NONE

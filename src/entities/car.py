@@ -7,6 +7,9 @@ from src.entities.lethal_entity import LethalEntity
 
 
 class Car(LethalEntity):
+    """
+    A class representing a car entity
+    """
 
     POSSIBLE_CAR_IMAGES: ClassVar = [
         'assets/car1.png',
