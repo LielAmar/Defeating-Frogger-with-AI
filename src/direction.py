@@ -38,16 +38,9 @@ class Direction(Enum):
 
     @staticmethod
     def from_int(index):
-        if index == 0:
-            return Direction.LEFT
-        if index == 1:
-            return Direction.RIGHT
-        if index == 2:
-            return Direction.UP
-        if index == 3:
-            return Direction.DOWN
-
-        return Direction.NONE
+        for direction in Direction:
+            if direction.value == index:
+                return direction
 
     @staticmethod
     def from_key(key):

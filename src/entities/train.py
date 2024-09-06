@@ -17,7 +17,7 @@ class Train(LethalEntity):
     ]
 
     SPEED: ClassVar = 30
-    PROBABILITY: ClassVar = 0.03
+    PROBABILITY: ClassVar = 0.3
 
     TRAIN_SIZE: ClassVar = CELL_SIZE
 
@@ -25,7 +25,7 @@ class Train(LethalEntity):
         super().__init__(
             x=x,
             y=y,
-            width=self.TRAIN_SIZE * 5,
+            width=self.TRAIN_SIZE * 7,
             height=self.TRAIN_SIZE,
             possible_images=self.POSSIBLE_TRAIN_IMAGES,
             direction=direction,

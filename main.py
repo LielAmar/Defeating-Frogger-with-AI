@@ -3,6 +3,7 @@ This file is the main entry point for the game. It allows the user to run the ga
 """
 import argparse
 
+from src.agents.dqn.dqn_runner import DQNRunner
 from src.agents.human.human_runner import HumanRunner
 from src.agents.neat.neat_runner import NEATRunner
 from src.agents.onlyup.onlyup_runner import OnlyUpRunner
@@ -45,12 +46,18 @@ if __name__ == "__main__":
         help='Run the game in test mode (either "*" to test all available models or the name of a specific model)'
     )
 
+    parser.add_argument(
+        '--debug',
+        action='store_true',
+        help='Run the game in debug mode'
+    )
+
     args = parser.parse_args()
 
     if args.agent == 'neat':
         agent = NEATRunner(settings=args)
     elif args.agent == 'dqn':
-        raise Exception('DQN not implemented yet')
+        agent = DQNRunner(settings=args)
     elif args.agent == 'onlyup':
         agent = OnlyUpRunner(settings=args)
     elif args.agent == 'random':

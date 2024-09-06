@@ -5,6 +5,7 @@ from argparse import Namespace
 
 import pygame
 
+from src.agents.dqn.dqn_player import DQNPlayer
 from src.constants import WIDTH, HEIGHT, BLACK, CARS_PER_ROW, CELL_SIZE, LOGS_PER_ROW, CAR_ROWS, WATER_ROWS, \
     SIDEWALK_ROWS, TRAIN_ROWS, GRASS_ROWS, FINISH_ROWS
 from src.direction import Direction
@@ -34,7 +35,7 @@ class FroggerGame(ABC):
             self.WATER_ROWS = []
 
         if not settings.train:
-            self.SIDEWALK_ROWS = self.SIDEWALK_ROWS + self.TRAIN_ROWS
+            self.GRASS_ROWS = self.GRASS_ROWS + self.TRAIN_ROWS
             self.TRAIN_ROWS = []
 
         pygame.init()
@@ -121,6 +122,60 @@ class FroggerGame(ABC):
         self.logs.draw(self.screen)
 
         self._draw_players(alive_only=True)
+
+        if self.settings.debug:
+            state = self.players[0].get_state(self.obstacles)
+
+            def calc_dist(dist):
+                if abs(dist - 1) <= 0.01:
+                    return 1
+
+                if abs(dist - 0.8) <= 0.01:
+                    return 2
+
+                if abs(dist - 0.6) <= 0.01:
+                    return 3
+
+                if abs(dist - 0.4) <= 0.01:
+                    return 4
+
+                if abs(dist - 0.2) <= 0.01:
+                    return 5
+
+                return 0
+
+            # take self.next_state and draw it on the screen
+            left_side = calc_dist(state[0]) * CELL_SIZE
+            right_side = calc_dist(state[1]) * CELL_SIZE
+            up_side = calc_dist(state[2]) * CELL_SIZE
+            down_side = calc_dist(state[3]) * CELL_SIZE
+            top_left = calc_dist(state[4]) * CELL_SIZE
+            top_right = calc_dist(state[5]) * CELL_SIZE
+            bottom_left = calc_dist(state[6]) * CELL_SIZE
+            bottom_right = calc_dist(state[7]) * CELL_SIZE
+            top_top_left = calc_dist(state[8]) * CELL_SIZE
+            top_top_right = calc_dist(state[9]) * CELL_SIZE
+            bottom_bottom_left = calc_dist(state[10]) * CELL_SIZE
+            bottom_bottom_right = calc_dist(state[11]) * CELL_SIZE
+            steps = state[12]
+
+            player_x = self.players[0].rect.x
+            player_y = self.players[0].rect.y
+
+            rect_width = CELL_SIZE
+            rect_height = CELL_SIZE
+
+            if left_side != 0:
+                pygame.draw.rect(self.screen, (255, 0, 0), (player_x + left_side, player_y, rect_width, rect_height))
+
+            if right_side != 0:
+                pygame.draw.rect(self.screen, (0, 255, 0), (player_x + right_side, player_y, rect_width, rect_height))
+
+            if up_side != 0:
+                pygame.draw.rect(self.screen, (0, 0, 255), (player_x, player_y - up_side, rect_width, rect_height))
+
+            if down_side != 0:
+                pygame.draw.rect(self.screen, (255, 255, 0), (player_x, player_y + down_side, rect_width, rect_height))
 
         pygame.display.flip()
 
@@ -216,7 +271,7 @@ class FroggerGame(ABC):
                     player.alive = False
                 else:
                     for log in logs_player_on:
-                        player.rect.x += log.direction * (CELL_SIZE if self.settings.grid_like else Log.SPEED)
+                        player.rect.x += log.direction.x * (CELL_SIZE if self.settings.grid_like else Log.SPEED)
                         player.rect.x = max(0, min(player.rect.x, WIDTH - CELL_SIZE))
 
     def run_single_game_frame(self):

@@ -1,5 +1,3 @@
-import pygame
-
 from src.constants import HEIGHT, CELL_SIZE
 from src.direction import Direction
 from src.frogger_game import FroggerGame

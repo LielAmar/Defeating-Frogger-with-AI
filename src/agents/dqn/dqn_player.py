@@ -1,61 +1,119 @@
-import numpy as np
 import pygame
-from pygame.sprite import Sprite
-from src.constants import WIDTH, HEIGHT, CELL_SIZE, NEAT_MAX_STEPS
-from dqn_agent import DQNAgent
-import random
 
-class DQNPlayer(Sprite):
-    def __init__(self, state_size, action_size):
+from src.constants import CELL_SIZE
+from src.entities.player import Player
+
+
+class DQNPlayer(Player):
+
+    MAX_DISTANCE = 5
+
+    MAX_STEPS = 50
+
+    def __init__(self):
         super().__init__()
 
-        self.image = pygame.Surface((CELL_SIZE, CELL_SIZE))
-        self.image.fill((0, 255, 0))
-        self.rect = self.image.get_rect()
-        self.rect.x = WIDTH // 2 - CELL_SIZE // 2
-        self.rect.y = HEIGHT - CELL_SIZE
-        self.state_size = state_size
-        self.action_size = action_size
-        self.agent = DQNAgent(state_size, action_size)
-        self.alive = True
+        self.steps = self.MAX_STEPS
 
-        self.steps = NEAT_MAX_STEPS
+        self.best_progress = 0
 
-    def get_state(self, cars):
-        state = np.zeros(self.state_size)
-        state[0] = self.rect.x / WIDTH
-        state[1] = self.rect.y / HEIGHT
-        for i, car in enumerate(cars):
-            if i < (self.state_size - 2) // 2:
-                state[2 + 2 * i] = car.rect.x / WIDTH
-                state[3 + 2 * i] = car.rect.y / HEIGHT
+    def reset(self):
+        super().reset()
+
+        self.steps = self.MAX_STEPS
+
+        self.best_progress = 0
+
+    def get_state(self, obstacles: pygame.sprite.Group):
+        state = [0.0] * 15
+
+        # Left-Side Sensor (directly horizontal to the left)
+        for obstacle in obstacles:
+            if obstacle.rect.y == self.rect.y and obstacle.rect.x < self.rect.x:
+                distance = (self.rect.x - obstacle.rect.x) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[0] = max(state[0], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+
+        # Right-Side Sensor (directly horizontal to the right)
+        for obstacle in obstacles:
+            if obstacle.rect.y == self.rect.y and obstacle.rect.x > self.rect.x:
+                distance = (obstacle.rect.x - self.rect.x) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[1] = max(state[1], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+
+        # Up-Side Sensor (directly vertical above)
+        for obstacle in obstacles:
+            if obstacle.rect.x == self.rect.x and obstacle.rect.y < self.rect.y:
+                distance = (self.rect.y - obstacle.rect.y) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[2] = max(state[2], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+
+        # Down-Side Sensor (directly vertical below)
+        for obstacle in obstacles:
+            if obstacle.rect.x == self.rect.x and obstacle.rect.y > self.rect.y:
+                distance = (obstacle.rect.y - self.rect.y) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[3] = max(state[3], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+
+        # Top-Left Sensor (one row above, to the left)
+        for obstacle in obstacles:
+            if obstacle.rect.y == self.rect.y - CELL_SIZE and obstacle.rect.x < self.rect.x:
+                distance = (self.rect.x - obstacle.rect.x) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[4] = max(state[4], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+
+        # Top-Right Sensor (one row above, to the right)
+        for obstacle in obstacles:
+            if obstacle.rect.y == self.rect.y - CELL_SIZE and obstacle.rect.x > self.rect.x:
+                distance = (obstacle.rect.x - self.rect.x) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[5] = max(state[5], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+
+        # Bottom-Left Sensor (one row below, to the left)
+        for obstacle in obstacles:
+            if obstacle.rect.y == self.rect.y + CELL_SIZE and obstacle.rect.x < self.rect.x:
+                distance = (self.rect.x - obstacle.rect.x) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[6] = max(state[6], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+
+        # Bottom-Right Sensor (one row below, to the right)
+        for obstacle in obstacles:
+            if obstacle.rect.y == self.rect.y + CELL_SIZE and obstacle.rect.x > self.rect.x:
+                distance = (obstacle.rect.x - self.rect.x) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[7] = max(state[7], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+
+        # Top-Top-Left Sensor (two rows above, to the left)
+        for obstacle in obstacles:
+            if obstacle.rect.y == self.rect.y - CELL_SIZE * 2 and obstacle.rect.x < self.rect.x:
+                distance = (self.rect.x - obstacle.rect.x) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[8] = max(state[8], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+
+        # Top-Top-Right Sensor (two rows above, to the right)
+        for obstacle in obstacles:
+            if obstacle.rect.y == self.rect.y - CELL_SIZE * 2 and obstacle.rect.x > self.rect.x:
+                distance = (obstacle.rect.x - self.rect.x) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[9] = max(state[9], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+
+        # Bottom-Bottom-Left Sensor (two rows below, to the left)
+        for obstacle in obstacles:
+            if obstacle.rect.y == self.rect.y + CELL_SIZE * 2 and obstacle.rect.x < self.rect.x:
+                distance = (self.rect.x - obstacle.rect.x) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[10] = max(state[10], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+
+        # Bottom-Bottom-Right Sensor (two rows below, to the right)
+        for obstacle in obstacles:
+            if obstacle.rect.y == self.rect.y + CELL_SIZE * 2 and obstacle.rect.x > self.rect.x:
+                distance = (obstacle.rect.x - self.rect.x) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[11] = max(state[11], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+
+        state[12] = self.MAX_STEPS - self.steps
+
+        state[13] = self.rect.x / CELL_SIZE
+        state[14] = self.rect.y / CELL_SIZE
+
         return state
-
-    def get_action(self, state):
-        return random.randint(0, self.action_size - 1)
-        # action = self.agent.act(state)
-
-    def update(self, action):
-        if not self.alive:
-            return
-
-        self.steps -= 1
-
-        if action == 0:  # Left
-            self.rect.x -= CELL_SIZE
-        elif action == 1:  # Right
-            self.rect.x += CELL_SIZE
-        elif action == 2:  # Up
-            self.rect.y -= CELL_SIZE
-        elif action == 3:  # Down
-            self.rect.y += CELL_SIZE
-
-        # Keep player within bounds
-        self.rect.x = max(0, min(self.rect.x, WIDTH - CELL_SIZE))
-        self.rect.y = max(0, min(self.rect.y, HEIGHT - CELL_SIZE))
-
-    def remember(self, state, action, reward, next_state, done):
-        self.agent.remember(state, action, reward, next_state, done)
-
-    def replay(self):
-        self.agent.replay()

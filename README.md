@@ -243,7 +243,7 @@ species_elitism = 2
 ```
 
 This configuration has a relatively low mutation rate, which makes the model gradually and slowly learn how to beat the game. The attached graph is:
-![NEAT 96% win rate](./graphs/img.png)
+![NEAT 96% win rate](./graphs/96% graph.png)
 
 The state function is:
 ```python
