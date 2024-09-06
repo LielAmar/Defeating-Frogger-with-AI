@@ -3,7 +3,7 @@ from torch import nn
 
 
 class DQNModel(nn.Module):
-    def __init__(self, state_dim: int = 13, action_dim: int = 5):
+    def __init__(self, state_dim: int = 25, action_dim: int = 5):
         super(DQNModel, self).__init__()
 
         self.fc1 = nn.Linear(state_dim, 64).to(device='cpu')
