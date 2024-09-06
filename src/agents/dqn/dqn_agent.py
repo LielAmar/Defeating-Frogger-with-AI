@@ -10,7 +10,7 @@ from src.agents.dqn.dqn_model import DQNModel
 
 
 class DQNAgent:
-    def __init__(self, settings: Namespace, state_dim: int = 25, action_dim: int = 5):
+    def __init__(self, settings: Namespace, state_dim: int = 256, action_dim: int = 5):
         self.settings = settings
 
         self.state_dim = state_dim
