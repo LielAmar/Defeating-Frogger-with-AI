@@ -61,18 +61,16 @@ class DQNRunner(FroggerRunner):
                 # Replay memory to train the agent
                 self.agent.replay()
 
-                # Update target model periodically
-                if player.steps % 10 == 0:
-                    self.agent.update_target_model()
+            self.agent.update_target_model()
 
             print(f"Episode {episode + 1}/{self.settings.games}, Total Reward: {total_reward}")
 
             # Optionally save the model at intervals
             if (episode + 1) % 10 == 0:
-                self.save_model(f"models/dqn/3_model_episode_{episode + 1}.pth")
+                self.save_model(f"models/dqn/model_episode_{episode + 1}.pth")
 
-            if episode == self.settings.games / 2:
-                self.agent.update_learning_rate()
+            # if episode == self.settings.games / 2:
+            #     self.agent.update_learning_rate()
 
             if self.settings.plot:
                 total_rewards.append(total_reward)

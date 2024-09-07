@@ -10,13 +10,13 @@ from src.agents.dqn.dqn_model import DQNModel
 
 
 class DQNAgent:
-    def __init__(self, settings: Namespace, state_dim: int = 256, action_dim: int = 5):
+    def __init__(self, settings: Namespace, state_dim: int = 25, action_dim: int = 5):
         self.settings = settings
 
         self.state_dim = state_dim
         self.action_dim = action_dim
 
-        self.memory = deque(maxlen=20000)
+        self.memory = deque(maxlen=40000)
 
         self.gamma = 0.99  # Discount factor
         self.epsilon = 1.0  # Exploration rate
@@ -48,12 +48,67 @@ class DQNAgent:
             if random.random() <= self.epsilon:
                 return random.randint(0, self.action_dim - 1)
 
-        state = torch.FloatTensor(state).unsqueeze(0).to(device='cpu')
+        state = torch.FloatTensor(state).unsqueeze(0).to(device='cuda')
 
         with torch.no_grad():
             q_values = self.model(state)
 
         return np.argmax(q_values.cpu().data.numpy())
+
+    # def replay(self):
+    #     if len(self.memory) < self.batch_size:
+    #         return
+    #
+    #     minibatch = random.sample(self.memory, self.batch_size)
+    #
+    #     for state, action, reward, next_state, done in minibatch:
+    #         state = torch.FloatTensor(state).unsqueeze(0).to(device='cuda')
+    #         next_state = torch.FloatTensor(next_state).unsqueeze(0).to(device='cuda')
+    #
+    #         target = reward
+    #
+    #         if not done:
+    #             target = reward + self.gamma * torch.max(self.target_model(next_state)[0])
+    #
+    #         target_f = self.model(state)
+    #         target_f[0][action] = target
+    #
+    #         self.optimizer.zero_grad()
+    #
+    #         loss = self.criterion(target_f, self.model(state))
+    #         loss.backward()
+    #
+    #         self.optimizer.step()
+    #
+    #     self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
+
+    # def replay(self):
+    #     if len(self.memory) < self.batch_size:
+    #         return
+    #
+    #     minibatch = random.sample(self.memory, self.batch_size)
+    #
+    #     states, actions, rewards, next_states, dones = zip(*minibatch)
+    #
+    #     states = torch.FloatTensor(states).to(device='cuda')
+    #     next_states = torch.FloatTensor(next_states).to(device='cuda')
+    #     actions = torch.LongTensor(actions).unsqueeze(1).to(device='cuda')  # Actions need to be used as indices TODO: Try without unsqueeze
+    #     rewards = torch.FloatTensor(rewards).to(device='cuda')
+    #     dones = torch.FloatTensor(dones).to(device='cuda')
+    #
+    #     q_values = self.model(states).gather(1, actions)
+    #
+    #     next_q_values = self.target_model(next_states).max(1)[0].detach()
+    #
+    #     targets = rewards + (1 - dones) * self.gamma * next_q_values
+    #
+    #     loss = self.criterion(q_values.squeeze(), targets)
+    #
+    #     self.optimizer.zero_grad()
+    #     loss.backward()
+    #     self.optimizer.step()
+    #
+    #     self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
 
     def replay(self):
         if len(self.memory) < self.batch_size:
@@ -61,24 +116,31 @@ class DQNAgent:
 
         minibatch = random.sample(self.memory, self.batch_size)
 
-        for state, action, reward, next_state, done in minibatch:
-            state = torch.FloatTensor(state).unsqueeze(0).to(device='cpu')
-            next_state = torch.FloatTensor(next_state).unsqueeze(0).to(device='cpu')
+        states, actions, rewards, next_states, dones = zip(*minibatch)
 
-            target = reward
+        states = torch.FloatTensor(states).to(device='cuda')
+        next_states = torch.FloatTensor(next_states).to(device='cuda')
+        actions = torch.LongTensor(actions).unsqueeze(1).to(device='cuda')
+        rewards = torch.FloatTensor(rewards).to(device='cuda')
+        dones = torch.FloatTensor(dones).to(device='cuda')
 
-            if not done:
-                target = reward + self.gamma * torch.max(self.target_model(next_state)[0])
+        # Get the Q-values from the current model for the selected actions
+        q_values = self.model(states).gather(1, actions)
 
-            # TODO - check with debug
-            target_f = self.model(state)
-            target_f[0][action] = target
+        # Get the actions that have the maximum Q-value from the next state using the main model
+        next_actions = self.model(next_states).max(1)[1].unsqueeze(1)
 
-            self.optimizer.zero_grad()
+        # Get the Q-values for those actions from the target model
+        next_q_values = self.target_model(next_states).gather(1, next_actions).detach()
 
-            loss = self.criterion(target_f, self.model(state))
-            loss.backward()
+        # Compute the target Q-values
+        targets = rewards + (1 - dones) * self.gamma * next_q_values
 
-            self.optimizer.step()
+        loss = self.criterion(q_values.squeeze(), targets)
+
+        self.optimizer.zero_grad()
+        loss.backward()
+        self.optimizer.step()
 
         self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
+

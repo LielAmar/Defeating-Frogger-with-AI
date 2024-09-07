@@ -43,9 +43,7 @@ class DQNFroggerGame(FroggerGame):
 
             self.update_player(player, self.direction)
 
-            # TODO: Update rewards
             if player.won:
-                # TODO: Give a reward for winning
                 self.reward += 100 + player.steps
 
             progress_made = ((HEIGHT - player.rect.y) // CELL_SIZE) - 1
@@ -59,20 +57,12 @@ class DQNFroggerGame(FroggerGame):
                 self.reward += progress_made
                 player.best_progress = progress_made
 
-            # if self.direction == Direction.DOWN:
-            #     self.reward -= 0.1
-
-            # self.reward -= (50 - player.steps) / 100
-
             if not player.alive:
                 if not player.won:
                     self.reward -= 50
 
                 if player.game_id < self.settings.lives - 1:
                     player.reset()
-                else:
-                    # TODO: Give a reward for finishing the game
-                    pass
 
     def run_single_game_frame(self):
         """
