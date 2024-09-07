@@ -30,3 +30,11 @@ class Log(LethalEntity):
             settings=settings,
             speed=self.SPEED
         )
+
+        self.player = None
+
+    def update(self):
+        super().update()
+
+        if self.player is not None:
+            self.player.rect.x += self.direction.x * (CELL_SIZE if self.settings.grid_like else self.speed)

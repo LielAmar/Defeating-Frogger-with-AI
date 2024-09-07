@@ -1,7 +1,4 @@
-import sys
 from typing import Optional
-
-import pygame
 
 from src.agents.dqn.dqn_agent import DQNAgent
 from src.constants import HEIGHT, CELL_SIZE
@@ -77,10 +74,10 @@ class DQNFroggerGame(FroggerGame):
 
         player = self.players[0]
 
-        self.state = player.get_state(self.obstacles)
+        self.state = player.get_state(self.obstacles, self.logs)
 
         alive_count = super().run_single_game_frame()
 
-        self.next_state = player.get_state(self.obstacles)
+        self.next_state = player.get_state(self.obstacles, self.logs)
 
         return alive_count

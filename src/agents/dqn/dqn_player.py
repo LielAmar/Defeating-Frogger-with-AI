@@ -29,11 +29,11 @@ class DQNPlayer(Player):
 
         self.best_progress = 0
 
-    def get_state(self, obstacles: pygame.sprite.Group):
+    def get_state(self, obstacles: pygame.sprite.Group = None, logs: pygame.sprite.Group = None) -> list:
         states = 25
 
-        if self.settings.train:
-            states += 5
+        states += 5 if self.settings.train else 0
+        states += 15 if self.settings.water else 0
 
         state = [0.0] * states
 
@@ -135,14 +135,75 @@ class DQNPlayer(Player):
 
         state[12] = self.MAX_STEPS - self.steps
 
+        if self.settings.water:
+            # Top left
+            state[25] = 1.0
+            for log in logs:
+                if log.rect.y == self.rect.y - CELL_SIZE and log.rect.x < self.rect.x:
+                    distance = (self.rect.x - log.rect.x) / CELL_SIZE
+                    if distance <= self.MAX_DISTANCE:
+                        state[25] = min(state[25], (distance * (1 / self.MAX_DISTANCE)))
+                        state[26] = log.direction.x
+
+            # Top right
+            state[27] = 1.0
+            for log in logs:
+                if log.rect.y == self.rect.y - CELL_SIZE and log.rect.x > self.rect.x:
+                    distance = (log.rect.x - self.rect.x) / CELL_SIZE
+                    if distance <= self.MAX_DISTANCE:
+                        state[27] = min(state[27], (distance * (1 / self.MAX_DISTANCE)))
+                        state[28] = log.direction.x
+
+            # Bottom left
+            state[29] = 1.0
+            for log in logs:
+                if log.rect.y == self.rect.y + CELL_SIZE and log.rect.x < self.rect.x:
+                    distance = (self.rect.x - log.rect.x) / CELL_SIZE
+                    if distance <= self.MAX_DISTANCE:
+                        state[29] = min(state[29], (distance * (1 / self.MAX_DISTANCE)))
+                        state[30] = log.direction.x
+
+            # Bottom right
+            state[31] = 1.0
+            for log in logs:
+                if log.rect.y == self.rect.y + CELL_SIZE and log.rect.x > self.rect.x:
+                    distance = (log.rect.x - self.rect.x) / CELL_SIZE
+                    if distance <= self.MAX_DISTANCE:
+                        state[31] = min(state[31], (distance * (1 / self.MAX_DISTANCE)))
+                        state[32] = log.direction.x
+
+            # Top
+            state[33] = 1.0
+            for log in logs:
+                if log.rect.x == self.rect.x and log.rect.y < self.rect.y:
+                    distance = (self.rect.y - log.rect.y) / CELL_SIZE
+                    if distance <= self.MAX_DISTANCE:
+                        state[33] = min(state[33], (distance * (1 / self.MAX_DISTANCE)))
+                        state[34] = log.direction.x
+
+            # Bottom
+            state[35] = 1.0
+            for log in logs:
+                if log.rect.x == self.rect.x and log.rect.y > self.rect.y:
+                    distance = (log.rect.y - self.rect.y) / CELL_SIZE
+                    if distance <= self.MAX_DISTANCE:
+                        state[35] = min(state[35], (distance * (1 / self.MAX_DISTANCE)))
+                        state[36] = log.direction.x
+
+            for log in logs:
+                if log.player is not None:
+                    state[37] = 1
+                    state[38] = (self.rect.x - log.rect.x) / CELL_SIZE
+                    state[39] = ((log.rect.x + (log.rect.width - CELL_SIZE)) - self.rect.x) / CELL_SIZE
+
         if self.settings.train:
             for obstacle in obstacles:
                 if isinstance(obstacle, Train):
-                    state[25] = 1
-                    state[26] = obstacle.direction.x
-                    state[27] = obstacle.rect.x / CELL_SIZE
+                    state[40 if self.settings.water else 25] = obstacle.direction.x
+                    state[41 if self.settings.water else 26] = obstacle.direction.x
+                    state[42 if self.settings.water else 27] = obstacle.rect.x / CELL_SIZE
 
-            state[28] = self.rect.x
-            state[29] = self.rect.y
+            state[43 if self.settings.water else 28] = self.rect.x
+            state[44 if self.settings.water else 29] = self.rect.y
 
         return state

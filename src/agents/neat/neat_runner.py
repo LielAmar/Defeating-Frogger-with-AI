@@ -68,12 +68,12 @@ class NEATRunner(FroggerRunner):
             print(f'{model_file}: won {wins_tracker[model_file]}% of the games')
 
             print(f'Total Wins: {sum(wins_tracker.values())}')
-            print(f'Win Rate: {sum(wins_tracker.values()) / (len(wins_tracker) * 100)}%')
+            print(f'Win Rate: {sum(wins_tracker.values()) / (len(wins_tracker))}%')
 
             best_player = max(wins_tracker, key=wins_tracker.get)
 
             print(f'Best Player Wins: {wins_tracker[best_player]}')
-            print(f'Best Player Win Rate: {wins_tracker[best_player] / 100}%')
+            print(f'Best Player Win Rate: {wins_tracker[best_player]}%')
 
         print(f"Best Player: {best_player}")
 

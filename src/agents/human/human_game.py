@@ -27,7 +27,6 @@ class HumanGame(FroggerGame):
         return any(player.alive for player in self.players)
 
     def update_game_frame(self):
-
         super().update_game_frame()
 
         direction = Direction.NONE

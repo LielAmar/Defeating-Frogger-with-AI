@@ -245,6 +245,8 @@ class FroggerGame(ABC):
         :param direction: Direction to move the player
         """
 
+        prev_x, prev_y = player.rect.x, player.rect.y
+
         player.update(direction)
 
         # If the player died to a car, kill it
@@ -260,21 +262,22 @@ class FroggerGame(ABC):
             player.alive = False
             player.won = True
 
+        for log in self.logs:
+            log.player = None
+
         # if there isn't a log under the player, kill it
         for water_row, direction in self.WATER_ROWS:
+            # If player in water
             if player.rect.y == water_row * CELL_SIZE:
                 logs_player_on = [
-                    log for log in self.logs
-                    if log.rect.y == water_row * CELL_SIZE
-                    and log.rect.x < player.rect.x < log.rect.x + log.rect.width
+                    log for log in self.logs if pygame.sprite.collide_rect(player, log)
                 ]
+
+                for log in logs_player_on:
+                    log.player = player
 
                 if not any(logs_player_on):
                     player.alive = False
-                else:
-                    for log in logs_player_on:
-                        player.rect.x += log.direction.x * (CELL_SIZE if self.settings.grid_like else Log.SPEED)
-                        player.rect.x = max(0, min(player.rect.x, WIDTH - CELL_SIZE))
 
     def run_single_game_frame(self):
         """
