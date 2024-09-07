@@ -61,33 +61,6 @@ class DQNAgent:
     #
     #     minibatch = random.sample(self.memory, self.batch_size)
     #
-    #     for state, action, reward, next_state, done in minibatch:
-    #         state = torch.FloatTensor(state).unsqueeze(0).to(device='cuda')
-    #         next_state = torch.FloatTensor(next_state).unsqueeze(0).to(device='cuda')
-    #
-    #         target = reward
-    #
-    #         if not done:
-    #             target = reward + self.gamma * torch.max(self.target_model(next_state)[0])
-    #
-    #         target_f = self.model(state)
-    #         target_f[0][action] = target
-    #
-    #         self.optimizer.zero_grad()
-    #
-    #         loss = self.criterion(target_f, self.model(state))
-    #         loss.backward()
-    #
-    #         self.optimizer.step()
-    #
-    #     self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
-
-    # def replay(self):
-    #     if len(self.memory) < self.batch_size:
-    #         return
-    #
-    #     minibatch = random.sample(self.memory, self.batch_size)
-    #
     #     states, actions, rewards, next_states, dones = zip(*minibatch)
     #
     #     states = torch.FloatTensor(states).to(device='cuda')

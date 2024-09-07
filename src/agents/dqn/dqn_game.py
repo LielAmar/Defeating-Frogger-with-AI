@@ -44,7 +44,7 @@ class DQNFroggerGame(FroggerGame):
             self.update_player(player, self.direction)
 
             if player.won:
-                self.reward += 100 + player.steps
+                self.reward += 100 + player.steps * 2
 
             progress_made = ((HEIGHT - player.rect.y) // CELL_SIZE) - 1
 

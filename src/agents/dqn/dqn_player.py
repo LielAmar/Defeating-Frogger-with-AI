@@ -125,7 +125,4 @@ class DQNPlayer(Player):
 
         state[12] = self.MAX_STEPS - self.steps
 
-        # state[13] = self.rect.x / CELL_SIZE
-        # state[14] = self.rect.y / CELL_SIZE
-
         return state

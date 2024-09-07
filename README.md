@@ -582,3 +582,263 @@ def get_state(self, obstacles: pygame.sprite.Group):
 
     return state
 ```
+
+
+
+
+### DQN (DDQN) Agent that got ~96%
+
+`rewards`:
+```python
+    def update_game_frame(self):
+        super().update_game_frame()
+
+        self.reward = 0
+
+        for x, player in enumerate(self.players):
+            output = self.agent.act(self.state)
+            self.direction = Direction.from_int(output)
+
+            self.update_player(player, self.direction)
+
+            if player.won:
+                self.reward += 100 + player.steps * 2
+
+            progress_made = ((HEIGHT - player.rect.y) // CELL_SIZE) - 1
+
+            if self.direction == Direction.UP:
+                self.reward += 1
+            if self.direction == Direction.DOWN:
+                self.reward -= 1
+
+            if self.direction == Direction.UP and player.best_progress < progress_made:
+                self.reward += progress_made
+                player.best_progress = progress_made
+
+            if not player.alive:
+                if not player.won:
+                    self.reward -= 50
+
+                if player.game_id < self.settings.lives - 1:
+                    player.reset()
+```
+
+`state`:
+```python
+    def get_state(self, obstacles: pygame.sprite.Group):
+        state = [0.0] * 25
+
+        # Left-Side Sensor (directly horizontal to the left)
+        for obstacle in obstacles:
+            if obstacle.rect.y == self.rect.y and obstacle.rect.x < self.rect.x:
+                distance = (self.rect.x - obstacle.rect.x) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[0] = max(state[0], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+                    state[13] = obstacle.direction.x
+
+        # Right-Side Sensor (directly horizontal to the right)
+        for obstacle in obstacles:
+            if obstacle.rect.y == self.rect.y and obstacle.rect.x > self.rect.x:
+                distance = (obstacle.rect.x - self.rect.x) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[1] = max(state[1], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+                    state[14] = obstacle.direction.x
+
+        # Up-Side Sensor (directly vertical above)
+        for obstacle in obstacles:
+            if obstacle.rect.x == self.rect.x and obstacle.rect.y < self.rect.y:
+                distance = (self.rect.y - obstacle.rect.y) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[2] = max(state[2], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+                    state[15] = obstacle.direction.x
+
+        # Down-Side Sensor (directly vertical below)
+        for obstacle in obstacles:
+            if obstacle.rect.x == self.rect.x and obstacle.rect.y > self.rect.y:
+                distance = (obstacle.rect.y - self.rect.y) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[3] = max(state[3], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+                    state[16] = obstacle.direction.x
+
+        # Top-Left Sensor (one row above, to the left)
+        for obstacle in obstacles:
+            if obstacle.rect.y == self.rect.y - CELL_SIZE and obstacle.rect.x < self.rect.x:
+                distance = (self.rect.x - obstacle.rect.x) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[4] = max(state[4], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+                    state[17] = obstacle.direction.x
+
+        # Top-Right Sensor (one row above, to the right)
+        for obstacle in obstacles:
+            if obstacle.rect.y == self.rect.y - CELL_SIZE and obstacle.rect.x > self.rect.x:
+                distance = (obstacle.rect.x - self.rect.x) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[5] = max(state[5], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+                    state[18] = obstacle.direction.x
+
+        # Bottom-Left Sensor (one row below, to the left)
+        for obstacle in obstacles:
+            if obstacle.rect.y == self.rect.y + CELL_SIZE and obstacle.rect.x < self.rect.x:
+                distance = (self.rect.x - obstacle.rect.x) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[6] = max(state[6], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+                    state[19] = obstacle.direction.x
+
+        # Bottom-Right Sensor (one row below, to the right)
+        for obstacle in obstacles:
+            if obstacle.rect.y == self.rect.y + CELL_SIZE and obstacle.rect.x > self.rect.x:
+                distance = (obstacle.rect.x - self.rect.x) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[7] = max(state[7], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+                    state[20] = obstacle.direction.x
+
+        # Top-Top-Left Sensor (two rows above, to the left)
+        for obstacle in obstacles:
+            if obstacle.rect.y == self.rect.y - CELL_SIZE * 2 and obstacle.rect.x < self.rect.x:
+                distance = (self.rect.x - obstacle.rect.x) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[8] = max(state[8], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+                    state[21] = obstacle.direction.x
+
+        # Top-Top-Right Sensor (two rows above, to the right)
+        for obstacle in obstacles:
+            if obstacle.rect.y == self.rect.y - CELL_SIZE * 2 and obstacle.rect.x > self.rect.x:
+                distance = (obstacle.rect.x - self.rect.x) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[9] = max(state[9], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+                    state[22] = obstacle.direction.x
+
+        # Bottom-Bottom-Left Sensor (two rows below, to the left)
+        for obstacle in obstacles:
+            if obstacle.rect.y == self.rect.y + CELL_SIZE * 2 and obstacle.rect.x < self.rect.x:
+                distance = (self.rect.x - obstacle.rect.x) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[10] = max(state[10], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+                    state[23] = obstacle.direction.x
+
+        # Bottom-Bottom-Right Sensor (two rows below, to the right)
+        for obstacle in obstacles:
+            if obstacle.rect.y == self.rect.y + CELL_SIZE * 2 and obstacle.rect.x > self.rect.x:
+                distance = (obstacle.rect.x - self.rect.x) / CELL_SIZE
+                if distance <= self.MAX_DISTANCE:
+                    state[11] = max(state[11], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
+                    state[24] = obstacle.direction.x
+
+        state[12] = self.MAX_STEPS - self.steps
+
+        return state
+```
+
+`dqn_agent`:
+```python
+import random
+from argparse import Namespace
+from collections import deque
+
+import numpy as np
+import torch
+from torch import optim, nn
+
+from src.agents.dqn.dqn_model import DQNModel
+
+
+class DQNAgent:
+    def __init__(self, settings: Namespace, state_dim: int = 25, action_dim: int = 5):
+        self.settings = settings
+
+        self.state_dim = state_dim
+        self.action_dim = action_dim
+
+        self.memory = deque(maxlen=40000)
+
+        self.gamma = 0.99  # Discount factor
+        self.epsilon = 1.0  # Exploration rate
+        self.epsilon_min = 0.01
+        self.epsilon_decay = 0.999
+
+        self.batch_size = 128
+        self.learning_rate = 0.0001
+
+        self.model = DQNModel(state_dim, action_dim)
+        self.target_model = DQNModel(state_dim, action_dim)
+        self.update_target_model()
+
+        self.optimizer = optim.Adam(self.model.parameters(), lr=self.learning_rate)
+        self.criterion = nn.MSELoss()
+
+    def update_learning_rate(self):
+        for param_group in self.optimizer.param_groups:
+            param_group['lr'] = param_group['lr'] / 10
+
+    def update_target_model(self):
+        self.target_model.load_state_dict(self.model.state_dict())
+
+    def remember(self, state, action, reward, next_state, done):
+        self.memory.append((state, action, reward, next_state, done))
+
+    def act(self, state) -> int:
+        if self.settings.test is None:
+            if random.random() <= self.epsilon:
+                return random.randint(0, self.action_dim - 1)
+
+        state = torch.FloatTensor(state).unsqueeze(0).to(device='cuda')
+
+        with torch.no_grad():
+            q_values = self.model(state)
+
+        return np.argmax(q_values.cpu().data.numpy())
+
+    def replay(self):
+        if len(self.memory) < self.batch_size:
+            return
+
+        minibatch = random.sample(self.memory, self.batch_size)
+
+        states, actions, rewards, next_states, dones = zip(*minibatch)
+
+        states = torch.FloatTensor(states).to(device='cuda')
+        next_states = torch.FloatTensor(next_states).to(device='cuda')
+        actions = torch.LongTensor(actions).unsqueeze(1).to(device='cuda')
+        rewards = torch.FloatTensor(rewards).to(device='cuda')
+        dones = torch.FloatTensor(dones).to(device='cuda')
+
+        # Get the Q-values from the current model for the selected actions
+        q_values = self.model(states).gather(1, actions)
+
+        # Get the actions that have the maximum Q-value from the next state using the main model
+        next_actions = self.model(next_states).max(1)[1].unsqueeze(1)
+
+        # Get the Q-values for those actions from the target model
+        next_q_values = self.target_model(next_states).gather(1, next_actions).detach()
+
+        # Compute the target Q-values
+        targets = rewards + (1 - dones) * self.gamma * next_q_values
+
+        loss = self.criterion(q_values.squeeze(), targets)
+
+        self.optimizer.zero_grad()
+        loss.backward()
+        self.optimizer.step()
+
+        self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
+```
+
+`dqn_model`:
+```python
+import torch
+from torch import nn
+
+
+class DQNModel(nn.Module):
+    def __init__(self, state_dim: int = 25, action_dim: int = 5):
+        super(DQNModel, self).__init__()
+
+        self.fc1 = nn.Linear(state_dim, 64).to(device='cuda')
+        self.fc2 = nn.Linear(64, 64).to(device='cuda')
+        self.fc3 = nn.Linear(64, action_dim).to(device='cuda')
+
+    def forward(self, state):
+        x = torch.relu(self.fc1(state))
+        x = torch.relu(self.fc2(x))
+        return self.fc3(x)
+```

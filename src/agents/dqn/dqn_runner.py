@@ -65,16 +65,15 @@ class DQNRunner(FroggerRunner):
 
             print(f"Episode {episode + 1}/{self.settings.games}, Total Reward: {total_reward}")
 
+            total_rewards.append(total_reward)
+
             # Optionally save the model at intervals
             if (episode + 1) % 10 == 0:
-                self.save_model(f"models/dqn/model_episode_{episode + 1}.pth")
+                self.save_model(f"models/dqn/2_model_episode_{episode + 1}.pth")
 
-            # if episode == self.settings.games / 2:
-            #     self.agent.update_learning_rate()
+                if self.settings.plot:
+                    self.update_plot(total_rewards)
 
-            if self.settings.plot:
-                total_rewards.append(total_reward)
-                self.update_plot(total_rewards)
 
     def save_model(self, filename):
         torch.save(self.agent.model.state_dict(), filename)
