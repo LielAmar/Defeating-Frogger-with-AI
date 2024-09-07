@@ -98,13 +98,13 @@ class DQNAgent:
         dones = torch.FloatTensor(dones).to(device='cuda')
 
         # Get the Q-values from the current model for the selected actions
-        q_values = self.model(states).gather(1, actions)
+        q_values = self.model(states).gather(1, actions).squeeze(1)
 
         # Get the actions that have the maximum Q-value from the next state using the main model
         next_actions = self.model(next_states).max(1)[1].unsqueeze(1)
 
         # Get the Q-values for those actions from the target model
-        next_q_values = self.target_model(next_states).gather(1, next_actions).detach()
+        next_q_values = self.target_model(next_states).gather(1, next_actions).squeeze(1).detach()
 
         # Compute the target Q-values
         targets = rewards + (1 - dones) * self.gamma * next_q_values

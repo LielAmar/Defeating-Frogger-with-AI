@@ -21,6 +21,8 @@ class DQNFroggerGame(FroggerGame):
         self.reward = 0
         self.next_state = None
 
+        self.settings.new_fps = self.settings.fps
+
     def update_configuration(self, agent):
         self.agent = agent
 
@@ -71,12 +73,16 @@ class DQNFroggerGame(FroggerGame):
         :return: True if the game is still running (any player is alive)
         """
 
-        self.clock.tick(self.settings.fps)
+        self.clock.tick(self.settings.new_fps)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    self.settings.new_fps = 5 if self.settings.new_fps != 5 else self.settings.fps
 
         player = self.players[0]
 

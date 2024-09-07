@@ -32,6 +32,7 @@ class DQNRunner(FroggerRunner):
         self.game.update_configuration(self.agent)
 
         total_rewards = []
+        game_results = []
 
         for episode in range(self.settings.games):
             self.game.reset()
@@ -63,17 +64,17 @@ class DQNRunner(FroggerRunner):
 
             self.agent.update_target_model()
 
-            print(f"Episode {episode + 1}/{self.settings.games}, Total Reward: {total_reward}")
+            print(f"Episode {episode + 1}/{self.settings.games}, Total Reward: {total_reward}. Won: {player.won}")
 
             total_rewards.append(total_reward)
+            game_results.append(1 if player.won else 0)
 
             # Optionally save the model at intervals
-            if (episode + 1) % 10 == 0:
-                self.save_model(f"models/dqn/2_model_episode_{episode + 1}.pth")
+            if (episode + 1) % 50 == 0:
+                self.save_model(f"models/dqn/episode_{episode + 1}.pth")
 
-                if self.settings.plot:
-                    self.update_plot(total_rewards)
-
+            if (episode + 1) % 10 == 0 and self.settings.plot:
+                self.update_plot(total_rewards, game_results)
 
     def save_model(self, filename):
         torch.save(self.agent.model.state_dict(), filename)
@@ -132,17 +133,56 @@ class DQNRunner(FroggerRunner):
 
         return wins
 
-    def update_plot(self, total_rewards):
+    # def update_plot(self, total_rewards, game_results):
+    #     if datetime.now() - self.last_plot_time < timedelta(seconds=3):
+    #         return
+    #
+    #     game_results = [sum(game_results[i - 100:i]) for i in range(100, len(game_results))]
+    #
+    #     plt.clf()
+    #     plt.title("DDQN Reward over Episodes")
+    #     plt.xlabel("Episodes")
+    #     plt.ylabel("Reward")
+    #     plt.plot(total_rewards, 'o', label="Reward", markersize=4)
+    #     plt.plot(total_rewards, label="Number of wins (last 100 games)")
+    #
+    #     plt.legend()
+    #     plt.pause(0.1)
+    #
+    #     self.last_plot_time = datetime.now()
+
+    def update_plot(self, total_rewards, game_results):
         if datetime.now() - self.last_plot_time < timedelta(seconds=3):
             return
 
         plt.clf()
-        plt.title("DQN Reward over Episodes")
+
+        plt.subplot(2, 1, 1)
+        plt.title("DDQN Reward & Wins over Episodes")
         plt.xlabel("Episodes")
         plt.ylabel("Reward")
-        plt.plot(total_rewards, label="Reward")
-
+        plt.plot(total_rewards, 'o', label="Reward", markersize=4)
         plt.legend()
+
+        if len(game_results) < 100:
+            wins = [sum(game_results[:i]) for i in range(1, len(game_results) + 1)]
+            losses = [i - win for i, win in enumerate(wins)]
+        else:
+            wins = [
+                sum(game_results[i - 100:i]) if i >= 100 else sum(game_results[:i])
+                for i in range(0, len(game_results))
+            ]
+            losses = [100 - win if i >= 100 else i - win for i, win in enumerate(wins)]
+
+        plt.subplot(2, 1, 2)
+        plt.xlabel("Episodes")
+        plt.ylabel("Number of Wins (last 100 games)")
+        plt.plot(wins, label="Wins (last 100 games)", color='blue')
+        plt.plot(losses, label="Losses (last 100 games)", color='red')
+        plt.axhline(y=90, color='g', linestyle='--', label='90%')
+        plt.legend()
+
+        plt.tight_layout()
         plt.pause(0.1)
 
         self.last_plot_time = datetime.now()
