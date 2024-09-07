@@ -3,7 +3,7 @@ from typing import ClassVar
 
 import pygame
 
-from src.constants import CELL_SIZE, WIDTH, HEIGHT, NEAT_MAX_STEPS
+from src.constants import CELL_SIZE, WIDTH, HEIGHT, MAX_STEPS
 from src.direction import Direction
 from src.utils import crop_image
 
@@ -30,7 +30,7 @@ class Player(pygame.sprite.Sprite, ABC):
         self.won = False
         self.alive = True
 
-        self.steps = NEAT_MAX_STEPS
+        self.steps = MAX_STEPS
 
         self.fitnesses = []
         self.action_taken = []
@@ -52,7 +52,7 @@ class Player(pygame.sprite.Sprite, ABC):
         self.won = False
         self.alive = True
 
-        self.steps = NEAT_MAX_STEPS
+        self.steps = MAX_STEPS
 
         self.fitnesses.append(0)
 

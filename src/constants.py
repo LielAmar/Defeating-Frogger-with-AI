@@ -13,7 +13,7 @@ HEIGHT = GRID_SIZE * CELL_SIZE
 CARS_PER_ROW = 2
 LOGS_PER_ROW = 3
 
-NEAT_MAX_STEPS = 50
+MAX_STEPS = 50
 
 # Map Configurations
 CAR_ROWS: list[tuple[int, Direction]] = [
