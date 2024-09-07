@@ -55,34 +55,6 @@ class DQNAgent:
 
         return np.argmax(q_values.cpu().data.numpy())
 
-    # def replay(self):
-    #     if len(self.memory) < self.batch_size:
-    #         return
-    #
-    #     minibatch = random.sample(self.memory, self.batch_size)
-    #
-    #     states, actions, rewards, next_states, dones = zip(*minibatch)
-    #
-    #     states = torch.FloatTensor(states).to(device='cuda')
-    #     next_states = torch.FloatTensor(next_states).to(device='cuda')
-    #     actions = torch.LongTensor(actions).unsqueeze(1).to(device='cuda')  # Actions need to be used as indices TODO: Try without unsqueeze
-    #     rewards = torch.FloatTensor(rewards).to(device='cuda')
-    #     dones = torch.FloatTensor(dones).to(device='cuda')
-    #
-    #     q_values = self.model(states).gather(1, actions)
-    #
-    #     next_q_values = self.target_model(next_states).max(1)[0].detach()
-    #
-    #     targets = rewards + (1 - dones) * self.gamma * next_q_values
-    #
-    #     loss = self.criterion(q_values.squeeze(), targets)
-    #
-    #     self.optimizer.zero_grad()
-    #     loss.backward()
-    #     self.optimizer.step()
-    #
-    #     self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
-
     def replay(self):
         if len(self.memory) < self.batch_size:
             return
@@ -116,4 +88,3 @@ class DQNAgent:
         self.optimizer.step()
 
         self.epsilon = max(self.epsilon_min, self.epsilon * self.epsilon_decay)
-

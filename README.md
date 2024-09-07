@@ -307,7 +307,6 @@ Let's go over the main parts of the training of this model:
     ```
 
 #### Plots
-Here is the plot of the training process of the model:
 ![NEAT 99% win rate](./graphs/neat 99 percent.png)
 
 As you can see, after the ~20th generation, our model constantly gets above 20 fitness score. Getting above 15 fitness score means the model had won the game.
@@ -594,7 +593,6 @@ Let's go over the main parts of the training of this model:
     ```
 
 #### Plots
-Here is the plot of the training process of the model:
 ![DQN 95% win rate](./graphs/ddqn 95 percent.png)
 
 As you can see, after ~1500 episodes, our model starts constantly improving and winning more than losing. At the peak, it achieves more than 90%.
@@ -626,7 +624,6 @@ Let's go over the main parts of the training of this model:
 2. As for the Model, Agent, State function and Reward function, they are exactly the same, except now `settings.train` is `True`, which adds 5 new sensors to the state, and a new penalty for getting to close to the sides of the screen.
 
 #### Plots
-Here is the plot of the training process of the model:
 ![DQN 91% with train win rate](./graphs/ddqn 91 percent with train.png)
 
 As you can see, after ~1000 episodes, our model starts constantly improving and winning more than losing. At the peak, it achieves about 90%.
