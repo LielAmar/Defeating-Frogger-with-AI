@@ -17,7 +17,7 @@ class Train(LethalEntity):
     ]
 
     SPEED: ClassVar = 30
-    PROBABILITY: ClassVar = 0.3
+    PROBABILITY: ClassVar = 0.05
 
     TRAIN_SIZE: ClassVar = CELL_SIZE
 

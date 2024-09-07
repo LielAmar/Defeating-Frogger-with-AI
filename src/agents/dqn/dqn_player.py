@@ -1,7 +1,10 @@
+from argparse import Namespace
+
 import pygame
 
 from src.constants import CELL_SIZE
 from src.entities.player import Player
+from src.entities.train import Train
 
 
 class DQNPlayer(Player):
@@ -10,8 +13,10 @@ class DQNPlayer(Player):
 
     MAX_STEPS = 50
 
-    def __init__(self):
+    def __init__(self, settings: Namespace):
         super().__init__()
+
+        self.settings = settings
 
         self.steps = self.MAX_STEPS
 
@@ -25,7 +30,12 @@ class DQNPlayer(Player):
         self.best_progress = 0
 
     def get_state(self, obstacles: pygame.sprite.Group):
-        state = [0.0] * 25
+        states = 25
+
+        if self.settings.train:
+            states += 5
+
+        state = [0.0] * states
 
         # Left-Side Sensor (directly horizontal to the left)
         for obstacle in obstacles:
@@ -124,5 +134,15 @@ class DQNPlayer(Player):
                     state[24] = obstacle.direction.x
 
         state[12] = self.MAX_STEPS - self.steps
+
+        if self.settings.train:
+            for obstacle in obstacles:
+                if isinstance(obstacle, Train):
+                    state[25] = 1
+                    state[26] = obstacle.direction.x
+                    state[27] = obstacle.rect.x / CELL_SIZE
+
+            state[28] = self.rect.x
+            state[29] = self.rect.y
 
         return state

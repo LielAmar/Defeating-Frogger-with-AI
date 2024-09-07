@@ -20,7 +20,7 @@ class DQNRunner(FroggerRunner):
             settings=settings
         )
 
-        self.agent = DQNAgent(self.settings)
+        self.agent = DQNAgent(self.settings, state_dim=25 if not self.settings.train else 30, action_dim=5)
 
         self.last_plot_time = datetime.now()
 
@@ -37,7 +37,7 @@ class DQNRunner(FroggerRunner):
         for episode in range(self.settings.games):
             self.game.reset()
 
-            player = DQNPlayer()
+            player = DQNPlayer(self.settings)
             self.game.players.append(player)
 
             total_reward = 0
@@ -117,7 +117,7 @@ class DQNRunner(FroggerRunner):
         for i in range(self.settings.games):
             self.game.reset()
 
-            player = DQNPlayer()
+            player = DQNPlayer(self.settings)
             self.game.players.append(player)
 
             while True:

@@ -23,6 +23,8 @@ class FroggerGame(ABC):
     def __init__(self, settings: Namespace):
         self.settings = settings
 
+        self.settings.new_fps = self.settings.fps
+
         self.CAR_ROWS = CAR_ROWS
         self.WATER_ROWS = WATER_ROWS
         self.SIDEWALK_ROWS = SIDEWALK_ROWS
@@ -281,12 +283,16 @@ class FroggerGame(ABC):
         :return: True if the game is still running (any player is alive)
         """
 
-        self.clock.tick(self.settings.fps)
+        self.clock.tick(self.settings.new_fps)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    self.settings.new_fps = 5 if self.settings.new_fps != 5 else self.settings.fps
 
         self.obstacles.update()
         self.logs.update()

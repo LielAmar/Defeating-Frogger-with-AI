@@ -24,7 +24,7 @@ class DQNAgent:
         self.epsilon_decay = 0.999
 
         self.batch_size = 128
-        self.learning_rate = 0.0001
+        self.learning_rate = 0.0002
 
         self.model = DQNModel(state_dim, action_dim)
         self.target_model = DQNModel(state_dim, action_dim)

@@ -21,8 +21,6 @@ class DQNFroggerGame(FroggerGame):
         self.reward = 0
         self.next_state = None
 
-        self.settings.new_fps = self.settings.fps
-
     def update_configuration(self, agent):
         self.agent = agent
 
@@ -55,6 +53,10 @@ class DQNFroggerGame(FroggerGame):
             if self.direction == Direction.DOWN:
                 self.reward -= 1
 
+            if self.settings.train:
+                if player.rect.x // CELL_SIZE < 3 or player.rect.x // CELL_SIZE > 13:
+                    self.reward -= min(abs(player.rect.x // CELL_SIZE - 8), abs(player.rect.x // CELL_SIZE - 9))
+
             if self.direction == Direction.UP and player.best_progress < progress_made:
                 self.reward += progress_made
                 player.best_progress = progress_made
@@ -73,28 +75,12 @@ class DQNFroggerGame(FroggerGame):
         :return: True if the game is still running (any player is alive)
         """
 
-        self.clock.tick(self.settings.new_fps)
-
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    self.settings.new_fps = 5 if self.settings.new_fps != 5 else self.settings.fps
-
         player = self.players[0]
 
         self.state = player.get_state(self.obstacles)
 
-        self.obstacles.update()
-        self.logs.update()
-
-        self.update_game_frame()
+        alive_count = super().run_single_game_frame()
 
         self.next_state = player.get_state(self.obstacles)
 
-        self._draw()
-
-        return any(player.alive for player in self.players)
+        return alive_count
