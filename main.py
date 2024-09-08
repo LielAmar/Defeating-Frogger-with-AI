@@ -98,10 +98,10 @@ if __name__ == "__main__":
 
 
         def run_neat():
-            return neat_agent._run_single_test('easy - 99%.pkl')
+            return neat_agent._run_single_test('medium - 72%.pkl')
 
         def run_ddqn():
-            return dqn_agent._run_single_test('easy - 100%.pth')
+            return dqn_agent._run_single_test('medium - 100%.pth')
 
         def run_onlyup():
             return onlyup_agent.run()
@@ -134,13 +134,12 @@ if __name__ == "__main__":
         print(f'OnlyUp: {onlyup_results}')
         print(f'Random: {random_results}')
 
-        # Create a plot titled 'Agents Comparison (100 iterations, 100 games each) - Easy Difficulty'
         plt.plot(neat_results, label='NEAT')
         plt.plot(ddqn_results, label='DDQN')
         plt.plot(onlyup_results, label='OnlyUp')
         plt.plot(random_results, label='Random')
 
-        plt.title('Agents Comparison (100 iterations, 100 games each) - Easy Difficulty')
+        plt.title('Agents Comparison (100 iterations, 100 games each) - Medium Difficulty')
         plt.xlabel('Iteration')
         plt.ylabel('Win Rate')
         plt.legend()
