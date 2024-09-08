@@ -63,7 +63,7 @@ response_replace_rate   = 0.1
 
 # genome node options
 num_hidden              = 3
-num_inputs              = 25
+num_inputs              = 30
 num_outputs             = 4
 num_initial_nodes       = 0
 initial_connection      = unconnected
