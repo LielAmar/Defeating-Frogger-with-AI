@@ -34,8 +34,7 @@ class NEATRunner(FroggerRunner):
 
     def run(self):
         if self.settings.test is not None:
-            self._run_test()
-            return
+            return self._run_test()
 
         for gen in range(self.settings.generations):
             self.population.run(self.eval_genomes, 1)
@@ -76,6 +75,8 @@ class NEATRunner(FroggerRunner):
             print(f'Best Player Win Rate: {wins_tracker[best_player]}%')
 
         print(f"Best Player: {best_player}")
+
+        return wins_tracker[best_player]
 
     def _run_single_test(self, model_name: str):
         # Load model from models folder
@@ -158,7 +159,7 @@ class NEATRunner(FroggerRunner):
         plt.plot(self.best_fitness, label="Best Fitness")
         plt.plot(self.average_fitness, label="Average Fitness")
 
-        plt.axhline(y=15, color='r', linestyle='--', label="Win Threshold")
+        plt.axhline(y=20, color='r', linestyle='--', label="Win Threshold")
 
         plt.legend()
         plt.pause(0.1)
