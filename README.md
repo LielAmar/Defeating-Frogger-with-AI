@@ -147,7 +147,7 @@ Let's go over the main parts of the training of this model:
     # genome node options
     num_hidden              = 3
     num_inputs              = 24
-    num_outputs             = 5
+    num_outputs             = 4
     num_initial_nodes       = 0
     initial_connection      = unconnected
     feed_forward            = True
@@ -718,3 +718,6 @@ Let's go over the main parts of the training of this model:
 
 #### Plots
 ![DQN 99% with water and train win rate](./graphs/ddqn 99 percent with water and train.png)
+
+### Gallery
+![Gameplay](./images/gameplay.png)
