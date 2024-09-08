@@ -30,8 +30,7 @@ class DQNRunner(FroggerRunner):
 
     def run(self):
         if self.settings.test is not None:
-            self._run_test()
-            return
+            return self._run_test()
 
         self.game.update_configuration(self.agent)
 
@@ -108,6 +107,8 @@ class DQNRunner(FroggerRunner):
 
         print(f"Best Player: {best_player}")
 
+        return wins_tracker[best_player]
+
     def _run_single_test(self, model_name: str):
         model_path = f'models/dqn/{model_name}'
 
@@ -136,24 +137,6 @@ class DQNRunner(FroggerRunner):
         print(f"Total number of Wins: {wins}")
 
         return wins
-
-    # def update_plot(self, total_rewards, game_results):
-    #     if datetime.now() - self.last_plot_time < timedelta(seconds=3):
-    #         return
-    #
-    #     game_results = [sum(game_results[i - 100:i]) for i in range(100, len(game_results))]
-    #
-    #     plt.clf()
-    #     plt.title("DDQN Reward over Episodes")
-    #     plt.xlabel("Episodes")
-    #     plt.ylabel("Reward")
-    #     plt.plot(total_rewards, 'o', label="Reward", markersize=4)
-    #     plt.plot(total_rewards, label="Number of wins (last 100 games)")
-    #
-    #     plt.legend()
-    #     plt.pause(0.1)
-    #
-    #     self.last_plot_time = datetime.now()
 
     def update_plot(self, total_rewards, game_results):
         if datetime.now() - self.last_plot_time < timedelta(seconds=3):

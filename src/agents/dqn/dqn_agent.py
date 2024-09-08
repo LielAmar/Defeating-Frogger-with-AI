@@ -64,9 +64,9 @@ class DQNAgent:
         states, actions, rewards, next_states, dones = zip(*minibatch)
 
         states = torch.FloatTensor(states).to(device='cuda')
-        next_states = torch.FloatTensor(next_states).to(device='cuda')
         actions = torch.LongTensor(actions).unsqueeze(1).to(device='cuda')
         rewards = torch.FloatTensor(rewards).to(device='cuda')
+        next_states = torch.FloatTensor(next_states).to(device='cuda')
         dones = torch.FloatTensor(dones).to(device='cuda')
 
         # Get the Q-values from the current model for the selected actions
