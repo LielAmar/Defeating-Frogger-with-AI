@@ -32,6 +32,8 @@ class DQNRunner(FroggerRunner):
         if self.settings.test is not None:
             return self._run_test()
 
+        start_time = datetime.now().strftime('%Y%m%d%H%M%S')
+
         self.game.update_configuration(self.agent)
 
         total_rewards = []
@@ -74,7 +76,7 @@ class DQNRunner(FroggerRunner):
 
             # Optionally save the model at intervals
             if (episode + 1) % 50 == 0:
-                self.save_model(f"models/dqn/episode_{episode + 1}.pth")
+                self.save_model(f"models/dqn/episode_{episode + 1}_{start_time}.pth")
 
             if (episode + 1) % 10 == 0 and self.settings.plot:
                 self.update_plot(total_rewards, game_results)
