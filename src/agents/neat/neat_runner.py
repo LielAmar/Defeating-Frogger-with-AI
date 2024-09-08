@@ -92,7 +92,7 @@ class NEATRunner(FroggerRunner):
             network = neat.nn.FeedForwardNetwork.create(model, self.config)
             networks.append(network)
 
-            player = NeatPlayer()
+            player = NeatPlayer(settings=self.settings)
             players.append(player)
 
             genomes.append(model)
@@ -122,7 +122,7 @@ class NEATRunner(FroggerRunner):
             network = neat.nn.FeedForwardNetwork.create(genome, config)
             networks.append(network)
 
-            player = NeatPlayer()
+            player = NeatPlayer(settings=self.settings)
             players.append(player)
 
             genome.fitness = 0

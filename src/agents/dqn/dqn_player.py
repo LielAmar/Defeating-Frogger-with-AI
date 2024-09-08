@@ -2,7 +2,7 @@ from argparse import Namespace
 
 import pygame
 
-from src.constants import CELL_SIZE
+from src.constants import CELL_SIZE, MAX_STEPS
 from src.entities.player import Player
 from src.entities.train import Train
 
@@ -11,21 +11,15 @@ class DQNPlayer(Player):
 
     MAX_DISTANCE = 5
 
-    MAX_STEPS = 50
-
     def __init__(self, settings: Namespace):
         super().__init__()
 
         self.settings = settings
 
-        self.steps = self.MAX_STEPS
-
         self.best_progress = 0
 
     def reset(self):
         super().reset()
-
-        self.steps = self.MAX_STEPS
 
         self.best_progress = 0
 
@@ -133,7 +127,7 @@ class DQNPlayer(Player):
                     state[11] = max(state[11], 1.0 - (distance * (1 / self.MAX_DISTANCE)))
                     state[24] = obstacle.direction.x
 
-        state[12] = self.MAX_STEPS - self.steps
+        state[12] = MAX_STEPS - self.steps
 
         if self.settings.water:
             # Top left

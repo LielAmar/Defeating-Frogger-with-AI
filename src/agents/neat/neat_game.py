@@ -20,7 +20,7 @@ class NeatFroggerGame(FroggerGame):
         super().update_game_frame()
 
         for x, player in enumerate(self.players):
-            output = self.networks[x].activate(player.get_state(self.obstacles))
+            output = self.networks[x].activate(player.get_state(self.obstacles, self.logs))
             direction_index = output.index(max(output))
             direction = Direction.from_int(direction_index)
 
