@@ -30,6 +30,7 @@ class NEATRunner(FroggerRunner):
         # Plotting configuration
         self.best_fitness = []
         self.average_fitness = []
+        self.number_of_species = []
         self.last_plot_time = datetime.now()
 
     def run(self):
@@ -40,6 +41,7 @@ class NEATRunner(FroggerRunner):
             self.population.run(self.eval_genomes, 1)
 
             if self.settings.plot:
+                self.number_of_species = [len([s for s in iteration if s != 0]) for iteration in self.stats.get_species_sizes()]
                 self.update_plot(gen)
 
         best_genome = self.stats.best_genome()
@@ -62,7 +64,7 @@ class NEATRunner(FroggerRunner):
         wins_tracker = dict()
 
         for model_file in models_files:
-            wins_tracker[model_file] = self._run_single_test(model_file)
+            wins_tracker[model_file] = self._run_single_test(model_file)[0]
 
             print(f'{model_file}: won {wins_tracker[model_file]}% of the games')
 
@@ -84,6 +86,7 @@ class NEATRunner(FroggerRunner):
             model = pickle.load(f)
 
         wins = 0
+        remaining_steps = []
 
         for i in range(self.settings.games):
             networks = []
@@ -107,12 +110,15 @@ class NEATRunner(FroggerRunner):
 
             win = player.won
             wins += win
+            remaining_steps.append(player.steps if win else 0)
 
             print(f'Player has {win and "WON" or "LOST"} game #{i + 1}')
 
-        print(f"Total number of Wins: {wins}")
+        average_remaining_steps = sum(remaining_steps) / wins if wins else 0
 
-        return wins
+        print(f"Total number of Wins: {wins}, remaining steps: {average_remaining_steps}")
+
+        return wins, average_remaining_steps
 
     def eval_genomes(self, all_genomes, config):
         networks = []
@@ -152,8 +158,16 @@ class NEATRunner(FroggerRunner):
         if datetime.now() - self.last_plot_time < timedelta(seconds=3):
             return
 
+        # Create a plot with 2 sub plots, one to the left and one to the right.
+        # The left one should show best_fitness and average_fitness over generations.
+        # The right one should show the number of species over generations.
+
         plt.clf()
+
+        plt.figure(figsize=(12, 6))
+        plt.subplot(1, 2, 1)
         plt.title("NEAT Fitness over Generations")
+
         plt.xlabel("Generation")
         plt.ylabel("Fitness")
         plt.plot(self.best_fitness, label="Best Fitness")
@@ -162,6 +176,16 @@ class NEATRunner(FroggerRunner):
         plt.axhline(y=20, color='r', linestyle='--', label="Win Threshold")
 
         plt.legend()
+
+        plt.subplot(1, 2, 2)
+        plt.title("Number of Species over Generations")
+
+        plt.xlabel("Generation")
+        plt.ylabel("Number of Species")
+        plt.plot(self.number_of_species, label="Number of Species")
+
+        plt.legend()
+
         plt.pause(0.1)
 
         self.last_plot_time = datetime.now()

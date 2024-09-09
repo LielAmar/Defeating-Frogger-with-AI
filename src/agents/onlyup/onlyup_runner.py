@@ -9,6 +9,7 @@ class OnlyUpRunner(FroggerRunner):
 
     def run(self):
         wins = 0
+        remaining_steps = []
 
         for i in range(self.settings.games):
             self.game.reset()
@@ -22,9 +23,12 @@ class OnlyUpRunner(FroggerRunner):
 
             win = player.won
             wins += win
+            remaining_steps.append(player.steps if win else 0)
 
             print(f'Player has {win and "WON" or "LOST"} game #{i + 1}')
 
-        print(f"Total number of Wins: {wins}")
+        average_remaining_steps = sum(remaining_steps) / wins if wins else 0
 
-        return wins
+        print(f"Total number of Wins: {wins}, remaining steps: {average_remaining_steps}")
+
+        return wins, average_remaining_steps

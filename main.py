@@ -96,17 +96,16 @@ if __name__ == "__main__":
         onlyup_results = []
         random_results = []
 
-
-        def run_neat():
+        def run_neat() -> tuple[int, list[int]]:
             return neat_agent._run_single_test('hard - 8%.pkl')
 
-        def run_ddqn():
+        def run_ddqn() -> tuple[int, list[int]]:
             return dqn_agent._run_single_test('hard - 99%.pth')
 
-        def run_onlyup():
+        def run_onlyup() -> tuple[int, list[int]]:
             return onlyup_agent.run()
 
-        def run_random():
+        def run_random() -> tuple[int, list[int]]:
             return random_agent.run()
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -129,15 +128,35 @@ if __name__ == "__main__":
                     else:
                         random_results.append(result)
 
-        print(f'NEAT: {neat_results}')
-        print(f'DDQN: {ddqn_results}')
-        print(f'OnlyUp: {onlyup_results}')
-        print(f'Random: {random_results}')
+        print('NEAT Results:', neat_results)
+        print('DDQN Results:', ddqn_results)
+        print('OnlyUp Results:', onlyup_results)
+        print('Random Results:', random_results)
 
-        plt.plot(neat_results, label='NEAT')
-        plt.plot(ddqn_results, label='DDQN')
-        plt.plot(onlyup_results, label='OnlyUp')
-        plt.plot(random_results, label='Random')
+        neat_wins = sum([wins for wins, remaining_steps in neat_results])
+        ddqn_wins = sum([wins for wins, remaining_steps in ddqn_results])
+        onlyup_wins = sum([wins for wins, remaining_steps in onlyup_results])
+        random_wins = sum([wins for wins, remaining_steps in random_results])
+
+        neat_average_win_rate = neat_wins / len(neat_results)
+        ddqn_average_win_rate = ddqn_wins / len(neat_results)
+        onlyup_average_win_rate = onlyup_wins / len(neat_results)
+        random_average_win_rate = random_wins / len(neat_results)
+
+        neat_average_remaining_steps = sum([remaining_steps for wins, remaining_steps in neat_results]) / len(neat_results)
+        ddqn_average_remaining_steps = sum([remaining_steps for wins, remaining_steps in ddqn_results]) / len(neat_results)
+        onlyup_average_remaining_steps = sum([remaining_steps for wins, remaining_steps in onlyup_results]) / len(neat_results)
+        random_average_remaining_steps = sum([remaining_steps for wins, remaining_steps in random_results]) / len(neat_results)
+
+        plt.plot([wins for wins, remaining_steps in neat_results], label='NEAT')
+        plt.plot([wins for wins, remaining_steps in ddqn_results], label='DDQN')
+        plt.plot([wins for wins, remaining_steps in onlyup_results], label='OnlyUp')
+        plt.plot([wins for wins, remaining_steps in random_results], label='Random')
+
+        print(f'NEAT: {neat_average_win_rate} wins, {neat_average_remaining_steps} remaining steps')
+        print(f'DDQN: {ddqn_average_win_rate} wins, {ddqn_average_remaining_steps} remaining steps')
+        print(f'OnlyUp: {onlyup_average_win_rate} wins, {onlyup_average_remaining_steps} remaining steps')
+        print(f'Random: {random_average_win_rate} wins, {random_average_remaining_steps} remaining steps')
 
         plt.title('Agents Comparison (100 iterations, 100 games each) - Hard Difficulty')
         plt.xlabel('Iteration')

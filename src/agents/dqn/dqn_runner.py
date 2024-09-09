@@ -95,7 +95,7 @@ class DQNRunner(FroggerRunner):
         wins_tracker = dict()
 
         for model_file in models_files:
-            wins_tracker[model_file] = self._run_single_test(model_file)
+            wins_tracker[model_file] = self._run_single_test(model_file)[0]
 
             print(f'{model_file}: won {wins_tracker[model_file]}% of the games')
 
@@ -120,6 +120,7 @@ class DQNRunner(FroggerRunner):
         self.game.update_configuration(self.agent)
 
         wins = 0
+        remaining_steps = []
 
         for i in range(self.settings.games):
             self.game.reset()
@@ -133,12 +134,15 @@ class DQNRunner(FroggerRunner):
 
             win = player.won
             wins += win
+            remaining_steps.append(player.steps if win else 0)
 
             print(f'Player has {win and "WON" or "LOST"} game #{i + 1}')
 
-        print(f"Total number of Wins: {wins}")
+        average_remaining_steps = sum(remaining_steps) / wins if wins else 0
 
-        return wins
+        print(f"Total number of Wins: {wins}, remaining steps: {average_remaining_steps}")
+
+        return wins, average_remaining_steps
 
     def update_plot(self, total_rewards, game_results):
         if datetime.now() - self.last_plot_time < timedelta(seconds=3):
