@@ -6,7 +6,7 @@ This project is a simple implementation of a frogger-like game, with two AI agen
 It was developed by Liel Amar, Tomer Meidan and Omer Ferster from The Hebrew University of Jerusalem, as part of the course "Introduction to Artificial Intelligence" (2024).
 
 ## Installation
-To install the required packages, use your favorite package manager to initialize a new environment.
+To install the required packages, use your favorite package manager with python 3.12 to initialize a new environment.
 Then, run the following command to install the required packages:
 ```bash
 pip install -r requirements.txt
@@ -26,6 +26,16 @@ The flags are as follows:
 - `--multi_test`: Whether to test multiple models or not. Default is `False`.
 
 * Note that when the game runs, you can click on "space" to change the speed of the game from 5 fps to the original fps given under the `fps` flag.
+
+## Difficulties
+
+The game has three difficulties:
+
+1. **Easy**: The basic difficulty, with cars moving horizontally.
+2. **Medium**: The intermediate difficulty, with cars moving horizontally and a train moving horizontally.
+3. **Hard**: The hardest difficulty, with cars moving horizontally, a train moving horizontally and logs moving vertically.
+
+To change the difficulty, you can change the `--train` flag to `True` and `--water` to `True`.
 
 ## Our Agents
 
@@ -59,24 +69,32 @@ python main.py --agent=onlyup --grid_like --fps=500 --lives=1 --games=100
 ### NEAT
 
 #### Information
-The best agent we managed to train using the NEAT algorithm achieved a win rate of 99%. It took a long time of playing with the configuration file, and the main principle that guided us was to achieve a smooth and steady convergence over time.
-In this section, we'll go over the exact configuration and code that lead to us getting a 99% win rate.
+The best agents we managed to train using the NEAT algorithm achieved the following:
+1. In easy mode, the best agent achieved a win rate of 99%.
+2. In medium mode, the best agent achieved a win rate of 72%.
+3. In hard mode, the best agent achieved a win rate of 8%.
+
+In this section, we'll go over the exact configuration and code that lead to us getting these results.
 
 #### Testing
-You can test this model yourself. It is included in this project under: `models/neat/99%.pkl`.
+You can test these models yourself. They are included in this project under: `models/neat/`:
+1. `models/neat/easy - 99%.pkl`
+2. `models/neat/medium - 72%.pkl`
+3. `models/neat/hard - 8%.pkl`
 
-To run this model, use the following command:
+To run any model, use the following command (replace with desired model name):
 
 ```bash
-python main.py --agent=neat --grid_like --fps=500 --lives=1 --games=100 --test="99%.pkl"
+python main.py --agent=neat --grid_like --fps=500 --lives=1 --games=100 --test="easy - 99%.pkl" [--train] [--water]
 ```
 
 #### Training
 
 Let's go over the main parts of the training of this model:
+
 1. Run command:
     ```bash
-    python main.py --agent=neat --grid_like --fps=500 --lives=3 --generations=300 --plot
+    python main.py --agent=neat --grid_like --fps=500 --lives=3 --generations=300 --plot [--train] [--water]
     ```
 
 2. Configuration file: `neat-config.txt`: 
@@ -146,7 +164,7 @@ Let's go over the main parts of the training of this model:
     
     # genome node options
     num_hidden              = 3
-    num_inputs              = 24
+    num_inputs              = 25  # Should be changed to 30 if train is True, 40 if water is True and 45 if both are True
     num_outputs             = 4
     num_initial_nodes       = 0
     initial_connection      = unconnected
@@ -385,26 +403,38 @@ Let's go over the main parts of the training of this model:
     ```
 
 #### Plots
-![NEAT 99% win rate](./graphs/neat 99 percent.png)
 
-As you can see, after the ~20th generation, our model constantly gets above 20 fitness score. Getting above 15 fitness score means the model had won the game.
+The following are the plots of the training of the NEAT algorithm, for each difficulty - easy, medium and hard respectively:
 
+![Easy NEAT 99% win rate](./graphs/easy%20-%20neat%20training.png)
+![Medium NEAT 72% win rate](./graphs/medium%20-%20neat%20training.png)
+![Hard NEAT 8% win rate](./graphs/hard%20-%20neat%20training.png)
+
+As you can see, in the easy task, NEAT was able to converge to a good solution pretty quickly, and the more complexity we introduce, the more the algorithm struggles.
 
 ### DQN
 
 #### Information
-The best agent we managed to train using the DQN (Double DQN) algorithm achieved a win rate of 95%. The main principle that guided us was to balance the reward function and state representation to achieve the best results.
-In this section, we'll go over the exact configuration and code that lead to us getting a 95% win rate.
 
-It is important to note that the exact variation of the DQN algorithm we used is the Double DQN algorithm.
+The best agents we managed to train using the DDQN algorithm achieved the following:
+1. In easy mode, the best agent achieved a win rate of 100%.
+2. In medium mode, the best agent achieved a win rate of 100%.
+3. In hard mode, the best agent achieved a win rate of 99%.
+
+In this section, we'll go over the exact configuration and code that lead to us getting these results.
+
+* It is important to note that the exact variation of the DQN algorithm we used is the Double DQN algorithm.
 
 #### Testing
-You can test this model yourself. It is included in this project under: `models/dqn/95%.pth`.
+You can test these models yourself. They are included in this project under: `models/dqn/`:
+1. `models/dqn/easy - 100%.pkl`
+2. `models/dqn/medium - 100%.pkl`
+3. `models/dqn/hard - 99%.pkl`
 
-To run this model, use the following command:
+To run any model, use the following command (replace with desired model name):
 
 ```bash
-python main.py --agent=dqn --grid_like --fps=500 --lives=1 --games=100 --test="95%.pth"
+python main.py --agent=dqn --grid_like --fps=500 --lives=1 --games=100 --test="easy - 100%.pth" [--train] [--water]
 ```
 
 #### Training
@@ -412,7 +442,7 @@ python main.py --agent=dqn --grid_like --fps=500 --lives=1 --games=100 --test="9
 Let's go over the main parts of the training of this model:
 1. Run command:
     ```bash
-    python main.py --agent=dqn --grid_like --fps=500 --lives=1 --games=2000 --plot
+    python main.py --agent=dqn --grid_like --fps=500 --lives=1 --games=2000 --plot [--train] [--water]
     ```
 
 2. Model (under `src/agents/dqn/dqn_model.py`):
@@ -732,70 +762,37 @@ Let's go over the main parts of the training of this model:
     ```
 
 #### Plots
-![DQN 95% win rate](./graphs/ddqn 95 percent.png)
+The following are the plots of the training of the NEAT algorithm, for each difficulty - easy, medium and hard respectively:
 
-As you can see, after ~1500 episodes, our model starts constantly improving and winning more than losing. At the peak, it achieves more than 90%.
+![Easy DDQN 100% win rate](./graphs/easy%20-%20ddqn%20training.png)
+![Medium DDQN 100% win rate](./graphs/medium%20-%20ddqn%20training.png)
+![Hard DDQN 99% win rate](./graphs/hard%20-%20ddqn%20training.png)
 
+It is noticeable that the DQN algorithm was able to converge to a good solution pretty quickly in the easy task, requiring just 1000 episodes.
+However, it took way longer in the medium and hard tasks, requiring 4000 and 6000 episodes respectively.
 
-### DQN (with trains)
+It did, however, reached very good results overall compared to NEAT.
 
-#### Information
-We wanted to give the DQN agent a harder challenge, and so we added an obstacle of a train moving horizontally.
-The chance of a train to spawn (in case there isn't an active train already) is 5%, and the agent got a win rate of 91% in this environment, after training for 5000
+## Comparison
 
-#### Testing
-You can test this model yourself. It is included in this project under: `models/dqn/91% with train.pth`.
+### Easy Difficulty
+![Models Comparison Easy](./graphs/easy%20-%20models%20comparison.png)
 
-To run this model, use the following command:
+### Medium Difficulty
+![Models Comparison Medium](./graphs/medium%20-%20models%20comparison.png)
 
-```bash
-python main.py --agent=dqn --grid_like --fps=500 --lives=1 --games=100 --test="91% with train.pth" --train
-```
+### Hard Difficulty
+![Models Comparison Hard](./graphs/hard%20-%20models%20comparison.png)
 
-#### Training
+We can see that the DQN algorithm was able to achieve better results than the NEAT algorithm in all difficulties.
+The two base-line agents, random and only-up, struggled to achieve good results and shuttered completely in the hard difficulty.
 
-Let's go over the main parts of the training of this model:
-1. Run command:
-    ```bash
-    python main.py --agent=dqn --grid_like --fps=500 --lives=1 --games=5000 --plot --train
-    ```
+## Gallery
 
-2. As for the Model, Agent, State function and Reward function, they are exactly the same, except now `settings.train` is `True`, which adds 5 new sensors to the state, and a new penalty for getting to close to the sides of the screen.
+This section shows some images from the game:
 
-#### Plots
-![DQN 91% with train win rate](./graphs/ddqn 91 percent with train.png)
-
-As you can see, after ~1000 episodes, our model starts constantly improving and winning more than losing. At the peak, it achieves about 90%.
-
-
-### DQN (with water and trains)
-
-#### Information
-We wanted to give the DQN agent an even harder challenge, and so we added an obstacle of a train moving horizontally, and a water obstacle with logs moving vertically.
-The chance of a train to spawn (in case there isn't an active train already) is 5%, and the logs move at a speed of 1 cell per frame. The player must jump on the logs to cross the water.
-The agent got a win rate of 99% in this environment, after training it for 10,000 episodes.
-
-#### Testing
-You can test this model yourself. It is included in this project under: `models/dqn/99% with water and train.pth`.
-
-To run this model, use the following command:
-
-```bash
-python main.py --agent=dqn --grid_like --fps=500 --lives=1 --games=100 --test="99% water train.pth" --water --train
-```
-
-#### Training
-
-Let's go over the main parts of the training of this model:
-1. Run command:
-    ```bash
-    python main.py --agent=dqn --grid_like --fps=500 --lives=1 --games=10000 --plot --train --water
-    ```
-
-2. As for the Model, Agent, State function and Reward function, they are exactly the same, except now `settings.train` and `settings.water` are `True`, which adds 5 new sensors for the train, a new penalty for getting to close to the sides of the screen, and 12 new sensors for the water.
-
-#### Plots
-![DQN 99% with water and train win rate](./graphs/ddqn 99 percent with water and train.png)
-
-### Gallery
-![Gameplay](./images/gameplay.png)
+![Car Section State](./images/car%20section%20state.png)
+</br></br>
+![Train Section State](./images/train%20section%20state.png)
+<br></br>
+![Water Section State](./images/water%20section%20state.png)
