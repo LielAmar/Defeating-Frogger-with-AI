@@ -24,7 +24,7 @@ class DQNRunner(FroggerRunner):
         state_dim += 5 if settings.train else 0
         state_dim += 15 if settings.water else 0
 
-        self.agent = DQNAgent(self.settings, state_dim=state_dim, action_dim=5)
+        self.agent = DQNAgent(self.settings, state_dim=state_dim, action_dim=4)
 
         self.last_plot_time = datetime.now()
 
