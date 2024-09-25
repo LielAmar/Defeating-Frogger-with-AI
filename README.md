@@ -107,9 +107,11 @@ Let's go over the main parts of the training of this model:
 
 The following are the plots of the training of the NEAT algorithm, for each difficulty - easy, medium and hard respectively:
 
-![Easy NEAT 99% win rate](./graphs/easy%20-%20neat%20training.png)
-![Medium NEAT 72% win rate](./graphs/medium%20-%20neat%20training.png)
-![Hard NEAT 8% win rate](./graphs/hard%20-%20neat%20training.png)
+<img src="./graphs/easy%20-%20neat%20training.png" width="300">
+<br>
+<img src="./graphs/medium%20-%20neat%20training.png" width="300">
+<br>
+<img src="./graphs/hard%20-%20neat%20training.png" width="300">
 
 As you can see, in the easy task, NEAT was able to converge to a good solution pretty quickly, and the more complexity we introduce, the more the algorithm struggles.
 
@@ -157,9 +159,11 @@ Let's go over the main parts of the training of this model:
 #### Plots
 The following are the plots of the training of the NEAT algorithm, for each difficulty - easy, medium and hard respectively:
 
-![Easy DDQN 100% win rate](./graphs/easy%20-%20ddqn%20training.png)
-![Medium DDQN 100% win rate](./graphs/medium%20-%20ddqn%20training.png)
-![Hard DDQN 99% win rate](./graphs/hard%20-%20ddqn%20training.png)
+<img src="./graphs/easy%20-%20ddqn%20training.png" width="300">
+<br>
+<img src="./graphs/medium%20-%20ddqn%20training.png" width="300">
+<br>
+<img src="./graphs/hard%20-%20ddqn%20training.png" width="300">
 
 It is noticeable that the DQN algorithm was able to converge to a good solution pretty quickly in the easy task, requiring just 1000 episodes.
 However, it took way longer in the medium and hard tasks, requiring 4000 and 6000 episodes respectively.
@@ -169,13 +173,15 @@ It did, however, reached very good results overall compared to NEAT.
 ## Comparison
 
 ### Easy Difficulty
-![Models Comparison Easy](./graphs/easy%20-%20models%20comparison.png)
+<img src="./graphs/easy%20-%20models%20comparison.png" width="300">
+<br>
 
 ### Medium Difficulty
-![Models Comparison Medium](./graphs/medium%20-%20models%20comparison.png)
+<img src="./graphs/medium%20-%20models%20comparison.png" width="300">
+<br>
 
 ### Hard Difficulty
-![Models Comparison Hard](./graphs/hard%20-%20models%20comparison.png)
+<img src="./graphs/hard%20-%20models%20comparison.png" width="300">
 
 We can see that the DQN algorithm was able to achieve better results than the NEAT algorithm in all difficulties.
 The two base-line agents, random and only-up, struggled to achieve good results and shuttered completely in the hard difficulty.
@@ -184,8 +190,6 @@ The two base-line agents, random and only-up, struggled to achieve good results 
 
 This section shows some images from the game:
 
-![Car Section State](./images/car%20section%20state.png)
-</br></br>
-![Train Section State](./images/train%20section%20state.png)
-<br></br>
-![Water Section State](./images/water%20section%20state.png)
+<img src="./images/car%20section%20state.png" width="250">
+<img src="./images/train%20section%20state.png" width="250">
+<img src="./images/water%20section%20state.png" width="250">
