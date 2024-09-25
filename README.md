@@ -37,6 +37,11 @@ The game has three difficulties:
 
 To change the difficulty, you can change the `--train` flag to `True` and `--water` to `True`.
 
+## Gameplay
+<video width="320" height="240" controls>
+  <source src="videos/gameplay.mp4" type="video/mp4">
+</video>
+
 ## Our Agents
 
 During our time working on the project, we tweaked and tuned our agents to achieve the best results possible. Here are the results of our base agents and best agents:
