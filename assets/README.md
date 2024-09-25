@@ -1,0 +1,4 @@
+# Frogger Assets
+In this project, we used the assets pack of [FROGIE - cross the road](https://graphicriver.net/item/frogie-the-cross-road/32632988?utm_source=Iterable&utm_medium=email&utm_campaign=market_email_workflow_t_orderconfirmation_all).
+
+However, due to the asset pack being protected by copyright laws, we could not publish this project with the assets included. Therefore, we decided to attach basic assets that can still be used for the game to run, however, they are plain colored. There are a few assets that were custom made by us, and they are available in this repository. The rest of the assets can be bought from the link above if needed.
