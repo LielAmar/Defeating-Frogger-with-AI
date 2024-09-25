@@ -5,6 +5,9 @@ Hello!
 This project is a simple implementation of a frogger-like game, with two AI agents that learn to play it using Deep Q-learning and NEAT.
 It was developed by Tomer Meidan, Omer Ferster and I, from The Hebrew University of Jerusalem, as part of the course "Introduction to Artificial Intelligence" (2024).
 
+## Gameplay
+![gameplay](videos/gameplay.gif)
+
 ## Installation
 To install the required packages, use your favorite package manager with python 3.12 to initialize a new environment.
 Then, run the following command to install the required packages:
@@ -36,11 +39,6 @@ The game has three difficulties:
 3. **Hard**: The hardest difficulty, with cars moving horizontally, a train moving horizontally and logs moving vertically.
 
 To change the difficulty, you can change the `--train` flag to `True` and `--water` to `True`.
-
-## Gameplay
-<video width="320" height="240" controls>
-  <source src="videos/gameplay.mp4" type="video/mp4">
-</video>
 
 ## Our Agents
 
