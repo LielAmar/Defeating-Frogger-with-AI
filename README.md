@@ -8,6 +8,9 @@ It was developed by Tomer Meidan, Omer Ferster and I, from The Hebrew University
 ## Gameplay
 ![gameplay](videos/gameplay.gif)
 
+## Assets
+Please read [assets/README.md](assets/README.md) to further understand why the assets in this repository do not match those in the video.
+
 ## Installation
 To install the required packages, use your favorite package manager with python 3.12 to initialize a new environment.
 Then, run the following command to install the required packages:
